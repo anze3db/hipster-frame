@@ -28,6 +28,10 @@ div > p {
 	overflow: hidden;
 }
 
+div > p.short {
+	line-height: 104px;
+}
+
 div > img {
 	width: 100px;
 	margin-left: 20px;

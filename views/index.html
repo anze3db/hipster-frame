@@ -8,7 +8,15 @@
 </head>
 <body>
 <img class='main' src = "<%= images.standard_resolution.url %>" />
-<div><img src = "<%= caption.from.profile_picture %>"><p><%= caption.text %></p></div>
+<div><img src = "<%= user.profile_picture %>">
+  <% if(caption !== null) { %>
+    <p <% if(caption.text.length < 20) { %>class='short'<% } %>>
+
+    <%= caption.text %></p>
+  <% } else { %>
+    <p><i>Posted on <%= (""+new Date(created_time*1000)).split(' ').slice(0,5).join(' ') %></i>
+  <% } %>
+</div>
 <input type="hidden" id="current" value="<%= created_time %>" />
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="client.js"></script>
