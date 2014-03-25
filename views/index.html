@@ -10,7 +10,7 @@
 <img class='main' src = "<%= images.standard_resolution.url %>" />
 <div><img src = "<%= user.profile_picture %>">
   <% if(caption !== null) { %>
-    <p <% if(caption.text.length < 20) { %>class='short'<% } %>>
+    <p <% if(caption.text.length < 25) { %>class='short'<% } %>>
 
     <%= caption.text %></p>
   <% } else { %>
