@@ -16,6 +16,7 @@
     "express": "~3.4.8",
     "instagram-node-lib": "~0.1.1",
     "ejs": "~0.8.5",
-    "config-heroku": "~0.1.1-a"
+    "config-heroku": "~0.1.1-a",
+    "ws": "~0.4.31"
   }
 }

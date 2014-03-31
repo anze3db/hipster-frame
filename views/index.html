@@ -7,14 +7,14 @@
   <link href='http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<img class='main' src = "<%= images.standard_resolution.url %>" />
-<div><img src = "<%= user.profile_picture %>">
+<img class='main' id="main" src = "<%= images.standard_resolution.url %>" />
+<div><img id="profile_picture" src = "<%= user.profile_picture %>">
   <% if(caption !== null) { %>
-    <p <% if(caption.text.length < 25) { %>class='short'<% } %>>
+    <p id='caption' <% if(caption.text.length < 25) { %>class='short'<% } %>>
 
     <%= caption.text %></p>
   <% } else { %>
-    <p><i>Posted on <%= (""+new Date(created_time*1000)).split(' ').slice(0,5).join(' ') %></i>
+    <p id='caption'>Posted on <%= (""+new Date(created_time*1000)).split(' ').slice(0,5).join(' ') %>
   <% } %>
 </div>
 <input type="hidden" id="current" value="<%= created_time %>" />
