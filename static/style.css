@@ -1,10 +1,19 @@
 body {
 	margin: 0px;
 }
-img.main {
-	width: 100%;
+div.main_image {
+  bottom: 146px;
+  background-color:white;
+  top:0px;
+  left: 0px;
+  right:0px; 
+  padding:0px 0px;
 }
-
+img.main{
+  margin:0px;
+  width:100%;
+  height:100%;
+}
 div {
 	bottom: 0px;
 	position: absolute;
@@ -32,7 +41,7 @@ div > p.short {
 	line-height: 100px;
 }
 
-div > img {
+#profile_picture {
 	width: 100px;
 	margin-left: 20px;
 	height: 100px;
