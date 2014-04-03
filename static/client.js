@@ -1,5 +1,5 @@
 $(function(){
-	if(false){//typeof WebSocket !== 'undefined'){
+	if(typeof WebSocket !== 'undefined'){
 		var host = location.origin.replace(/^http/, 'ws')
 		  , ws = new WebSocket(host);
 		ws.onmessage = function (event) {
