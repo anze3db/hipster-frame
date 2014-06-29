@@ -14,15 +14,13 @@ app.use(express.static(__dirname + '/static'));
 
 // Render main page
 app.get('/', function(req, res) {
-  logic.retrieveLatest(function(latest){
-    res.render('index', latest);
-  });
+  res.render('index')
 });
 
 // Used for checking when to refresh the page
 app.get('/check', function(req, res){
   logic.retrieveLatest(function(latest){
-    res.send(latest.created_time);
+    res.send(latest);
   });
 });
 
