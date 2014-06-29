@@ -19,7 +19,7 @@ $(function(){
 
       if(caption === null){
         created = (""+new Date(data.created_time*1000))
-          .split(' ').slice(0,5).join(' ')
+          .split(' ').slice(0,5).join(' ');
         caption_view = (
           <p id='caption'>Posted on {created}</p>
         );
