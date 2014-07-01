@@ -14,7 +14,7 @@ app.use(express.static(__dirname + '/static'));
 
 // Render main page
 app.get('/', function(req, res) {
-  res.render('index')
+  res.render('index');
 });
 
 // Used for checking when to refresh the page

@@ -1,14 +1,56 @@
 /** @jsx React.DOM */
 $(function(){
+
+  var ImageBox = React.createClass({
+    loadCommentsFromServer: function(){
+      $.getJSON(this.props.url, function(data){
+          this.setState(data);
+        }.bind(this)
+      );
+    },
+    getInitialState: function() {
+      return {};
+    },
+    componentWillMount: function() {
+      this.loadCommentsFromServer();
+      setInterval(this.loadCommentsFromServer, this.props.refreshRate);
+    },
+    toggleComments: function(){
+      this.setState({
+        show_comments: !this.state.show_comments
+      });
+    },
+    render: function(){
+      if($.isEmptyObject(this.state)){
+        return (
+          <div className="loading">
+            Loading
+          </div>
+        );
+      }
+      return (
+        <div onClick={this.toggleComments}>
+          <div className="main_image">
+            <ImageView images={this.state.images} />
+          </div>
+          <CaptionView data={this.state} />
+          <CommentsView comments={this.state.comments}
+            show_comments={this.state.show_comments} />
+        </div>
+      );
+    }
+  });
+
   var ImageView = React.createClass({
     render: function() {
       return (
-        <img className='main' id="main" 
+        <img className='main' id="main"
           src={this.props.images.standard_resolution.url} />
       );
     }
   });
-  var CommentView = React.createClass({
+
+  var CaptionView = React.createClass({
     render: function(){
       var data = this.props.data,
           user = data.user,
@@ -30,50 +72,57 @@ $(function(){
         );
       }
       return (
-        <div className="comment" id="comment">
-          <img id="profile_picture" src={user.profile_picture} />
+        <div className="comment">
+          <img className="profile_picture" src={user.profile_picture} />
           {caption_view}
         </div>
       );
     }
   });
 
-  var ImageBox = React.createClass({
-    loadCommentsFromServer: function(){
-      $.getJSON(this.props.url, function(data){
-          this.setState(data);
-        }.bind(this)
-      );
-    },
-    getInitialState: function() {
-      return {};
-    },
-    componentWillMount: function() {
-      this.loadCommentsFromServer();
-      setInterval(this.loadCommentsFromServer, this.props.refreshRate);
-    },
+  var CommentsView = React.createClass({
     render: function(){
-      if($.isEmptyObject(this.state)){
+      var comments = this.props.comments,
+          show_last = this.props.show_comments;
+      if(comments.count === 0){
         return (
-          <div className="loading">
-            Loading
+          <div></div>
+        );
+      }
+      if(show_last){
+        var comments_list = $.map(comments.data, function(comment){
+          var data = {
+            user: comment.from,
+            caption: comment
+          };
+          return (
+            <CaptionView data={data} />
+          );
+        });
+        return (
+          <div className="comments_list">
+            {comments_list}
           </div>
         );
       }
       return (
-        <div>
-          <div className="main_image">
-            <ImageView images={this.state.images} />
-          </div>
-          <CommentView data={this.state} />
-        </div>
+        <div className="comments_count">{comments.count}</div>
+      );
+    }
+  });
+
+  var Comment = React.createClass({
+    render: function(){
+      var comment = this.props.comment;
+      return (
+        <div></div>
       );
     }
   });
 
   // Main View
   React.renderComponent(
-    <ImageBox url="/check" refreshRate="1000" />,
+    <ImageBox url="/check" refreshRate="100000" />,
     document.getElementById('content')
   );
 });
