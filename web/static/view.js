@@ -38,7 +38,7 @@ $(function(){
             show_comments={this.state.show_comments} />
         </div>
       );
-    }
+    },
   });
 
   var ImageView = React.createClass({
@@ -47,6 +47,16 @@ $(function(){
         <img className='main' id="main"
           src={this.props.images.standard_resolution.url} />
       );
+    },
+    componentDidMount: function(){
+
+      var $main = $('.main_image'),
+          $img = $(this.getDOMNode()),
+          w = $main.width(),
+          h = $main.height(),
+          offset = Math.round((h-w)/2);
+
+      $img.css('top', offset + 'px');
     }
   });
 
@@ -122,7 +132,8 @@ $(function(){
 
   // Main View
   React.renderComponent(
-    <ImageBox url="/check" refreshRate="100000" />,
+    <ImageBox url="/check" refreshRate="1000000" />,
     document.getElementById('content')
   );
+
 });
