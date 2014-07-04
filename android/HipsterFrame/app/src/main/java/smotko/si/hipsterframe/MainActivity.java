@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,17 +15,41 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
 
     private WebView mWebView;
+    private boolean reload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initWebView();
-        initImmersiveMode();
+        setImmersiveMode();
     }
 
-    private void initImmersiveMode() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setImmersiveMode();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent e){
+
+        switch(e.getAction()){
+            case MotionEvent.ACTION_UP:
+                setImmersiveMode();
+                if((e.getEventTime() - e.getDownTime()) > 300){
+                    mWebView.reload();
+                }
+                reload = false;
+                break;
+        }
+
+        return true;
+    }
+
+    private void setImmersiveMode() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
