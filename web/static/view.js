@@ -4,7 +4,7 @@ $(function(){
   var ImageBox = React.createClass({
     loadCommentsFromServer: function(){
       $.getJSON(this.props.url, function(data){
-          this.setState(data);
+        this.setState({images: data.slice(0,5)});
         }.bind(this)
       );
     },
@@ -28,14 +28,22 @@ $(function(){
           </div>
         );
       }
-      return (
-        <div onClick={this.toggleComments}>
-          <div className="main_image">
-            <ImageView images={this.state.images} />
+      var that = this,
+          images;
+
+      images = $.map(this.state.images, function(image){
+        return (
+          <div style={{height: $(window).height()}}>
+            <div className="main_image">
+              <ImageView images={image.images} />
+            </div>
+            <CaptionView data={image} />
           </div>
-          <CaptionView data={this.state} />
-          <CommentsView comments={this.state.comments}
-            show_comments={this.state.show_comments} />
+        );
+      });
+      return (
+        <div onClick={that.toggleComments}>
+        {images}
         </div>
       );
     },
@@ -62,6 +70,7 @@ $(function(){
 
   var CaptionView = React.createClass({
     render: function(){
+      console.log(this.props.data);
       var data = this.props.data,
           user = data.user,
           caption = data.caption,

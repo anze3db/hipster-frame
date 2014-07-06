@@ -2,6 +2,7 @@ package smotko.si.hipsterframe;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -35,18 +36,18 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent e){
-
-        switch(e.getAction()){
-            case MotionEvent.ACTION_UP:
-                setImmersiveMode();
-                if((e.getEventTime() - e.getDownTime()) > 300){
+        super.dispatchTouchEvent(e);
+        switch(e.getAction() & MotionEvent.ACTION_MASK){
+            case MotionEvent.ACTION_POINTER_UP:
+                if(e.getPointerCount() == 2){
                     mWebView.reload();
                 }
-                reload = false;
+                break;
+            case MotionEvent.ACTION_UP:
+                setImmersiveMode();
                 break;
         }
-
-        return true;
+        return false;
     }
 
     private void setImmersiveMode() {

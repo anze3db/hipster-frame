@@ -9,22 +9,25 @@ instagram.set('client_secret', conf.instagram.client_secret);
 // Fetch recent user images and return the latest one
 exports.retrieveLatest = function(resolve){
 
-  var results = [];
+  var results = [],
+      returned_results = 0;
 
   function check(){
-    if(results.length !== user_ids.length){
+    if(returned_results !== user_ids.length){
       return;
     }
-    var latest = { created_time : 0 };
-    for (var i = results.length - 1; i >= 0; i--) {
-      if(parseInt(results[i].created_time) > parseInt(latest.created_time)){
-        latest = results[i];
-      }
+    results.sort(function(a,b){
+      return parseInt(b.created_time) - parseInt(a.created_time);
+    });
+    for(var i = 0; i < results.length; i++){
+      console.log(results[i].created_time);
     }
-    resolve(latest);
+    console.log(results.length);
+    resolve(results);
   }
   function complete(r) {
-    results.push(r.shift());
+    results = results.concat(r);
+    returned_results++;
     check();
   }
   for (var i = user_ids.length - 1; i >= 0; i--) {
