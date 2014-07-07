@@ -39,8 +39,13 @@ $(function(){
             <div className="main_image">
               <ImageView images={image.images} />
             </div>
-            <CaptionView data={image} />
+            <div style={{height: $(window).height() - $(window).width(),
+              position: "relative"}}>
+              <div style={{top: "50%", marginTop: "-70px", position:"absolute", width:"100%"}}>
+              <CaptionView data={image} />
+              </div>
             <CommentsView comments={image.comments} />
+            </div>
           </div>
         );
       });
@@ -74,6 +79,7 @@ $(function(){
   var CaptionView = React.createClass({
     render: function(){
       var data = this.props.data,
+          count = data.comments ? data.comments.count : 0,
           user = data.user,
           caption = data.caption,
           caption_view,
@@ -96,21 +102,31 @@ $(function(){
         <div className="comment">
           <img className="profile_picture" src={user.profile_picture} />
           {caption_view}
+          <CommentsCount count={count} />
         </div>
       );
     }
   });
-
-  var CommentsView = React.createClass({
+  var CommentsCount = React.createClass({
     render: function(){
-      var comments = this.props.comments,
-          show_last = comments.show_comments;
-      if(comments.count === 0){
+      var count = this.props.count;
+
+      if(count === 0){
         return (
           <div></div>
         );
       }
-      if(show_last){
+      return (
+        <div className="comments_count">{count}</div>
+      );
+    }
+  });
+  var CommentsView = React.createClass({
+    render: function(){
+      var comments = this.props.comments,
+          show_last = comments.show_comments;
+
+      if(comments.count > 0 && show_last){
         var comments_list = $.map(comments.data, function(comment){
           var data = {
             user: comment.from,
@@ -127,7 +143,7 @@ $(function(){
         );
       }
       return (
-        <div className="comments_count">{comments.count}</div>
+        <div></div>
       );
     }
   });

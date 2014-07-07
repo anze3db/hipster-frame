@@ -65,6 +65,6 @@ public class MainActivity extends Activity {
         mWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        mWebView.loadUrl("http://192.168.1.7:5000/");
+        mWebView.loadUrl("http://hipster-frame.herokuapp.com/");
     }
 }

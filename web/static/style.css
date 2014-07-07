@@ -2,9 +2,9 @@ body {
   margin: 0px;
   font-family: 'Poiret One', cursive;
   overflow-y:hidden;
+  background-color: #3f51b5;
 }
 div.main_image {
-  background-color:white;
 }
 img.main{
   margin:0px;
@@ -12,28 +12,12 @@ img.main{
 }
 div.comment {
   position: absolute;
-  background: white;
   width: 100%;
   padding: 20px 0px;
   margin: 0px;
-  background-color: #fff;
-  alpha: 0.12;
 }
 .comments_list > div.comment {
   position: relative;
-}
-.comments_list {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-.comments_list:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 30%;
-  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%,rgba(255,255,255,1) 100%);
 }
 
 div.comment > p {
@@ -47,7 +31,7 @@ div.comment > p {
   line-height: 52px;
   overflow: hidden;
   opacity: 1;
-  color:#000;
+  color:#e8eaf6;
 }
 
 div.comment > p.short {
@@ -68,7 +52,7 @@ div.comment > p.short {
   bottom: 20px;
   position: absolute;
   left: 80px;
-  background: #cc0000;
+  background: #1a237e;
   padding:10px 20px;
   font-family: 'Arial';
   color: white;
@@ -84,9 +68,12 @@ div.comment > p.short {
   bottom: 0px;
   left: 0px;
   right: 0px;
-  background-color: white;
+  background-color: #1a237e;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .image_container{
   position: relative;
+  overflow: hidden;
 }
