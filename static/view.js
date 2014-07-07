@@ -4,7 +4,14 @@ $(function(){
   var ImageBox = React.createClass({
     loadCommentsFromServer: function(){
       $.getJSON(this.props.url, function(data){
-        this.setState({images: data.slice(0,5)});
+        var new_date = parseInt(data[0].created_time),
+            images = this.state.images,
+            old_date = parseInt(images ? this.state.images[0].created_time : "0");
+        if(new_date > old_date){
+          this.setState({images: data.slice(0,10)});
+          window.scrollTo(0, 0);
+        }
+
         }.bind(this)
       );
     },
@@ -159,7 +166,7 @@ $(function(){
 
   // Main View
   React.renderComponent(
-    <ImageBox url="/check" refreshRate="1000000" />,
+    <ImageBox url="/check" refreshRate="10000" />,
     document.getElementById('content')
   );
 
