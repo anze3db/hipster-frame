@@ -19,10 +19,6 @@ exports.retrieveLatest = function(resolve){
     results.sort(function(a,b){
       return parseInt(b.created_time) - parseInt(a.created_time);
     });
-    for(var i = 0; i < results.length; i++){
-      console.log(results[i].created_time);
-    }
-    console.log(results.length);
     resolve(results);
   }
   function complete(r) {
