@@ -166,7 +166,7 @@ $(function(){
 
   // Main View
   React.renderComponent(
-    <ImageBox url="/check" refreshRate="10000" />,
+    <ImageBox url="/check" refreshRate="100000" />,
     document.getElementById('content')
   );
 
