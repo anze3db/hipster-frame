@@ -15,11 +15,6 @@ $(function(){
       this.loadCommentsFromServer();
       setInterval(this.loadCommentsFromServer, this.props.refreshRate);
     },
-    toggleComments: function(){
-      this.setState({
-        show_comments: !this.state.show_comments
-      });
-    },
     render: function(){
       if($.isEmptyObject(this.state)){
         return (
@@ -31,18 +26,26 @@ $(function(){
       var that = this,
           images;
 
-      images = $.map(this.state.images, function(image){
+      images = $.map(this.state.images, function(image, i){
+
+        var toggleComments = function(){
+          image.comments.show_comments = !image.comments.show_comments;
+          that.forceUpdate();
+        };
+
         return (
-          <div style={{height: $(window).height()}}>
+          <div className="image_container" style={{height: $(window).height()}}
+            onClick={toggleComments}>
             <div className="main_image">
               <ImageView images={image.images} />
             </div>
             <CaptionView data={image} />
+            <CommentsView comments={image.comments} />
           </div>
         );
       });
       return (
-        <div onClick={that.toggleComments}>
+        <div>
         {images}
         </div>
       );
@@ -70,7 +73,6 @@ $(function(){
 
   var CaptionView = React.createClass({
     render: function(){
-      console.log(this.props.data);
       var data = this.props.data,
           user = data.user,
           caption = data.caption,
@@ -102,7 +104,7 @@ $(function(){
   var CommentsView = React.createClass({
     render: function(){
       var comments = this.props.comments,
-          show_last = this.props.show_comments;
+          show_last = comments.show_comments;
       if(comments.count === 0){
         return (
           <div></div>
