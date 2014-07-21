@@ -39,18 +39,11 @@ $(function(){
         };
 
         return (
-          <div className="image_container" style={{height: $(window).height()}}
+          <div className="post"
             onClick={toggleComments}>
-            <div className="main_image">
-              <ImageView images={image.images} />
-            </div>
-            <div style={{height: $(window).height() - $(window).width(),
-              position: "relative"}}>
-              <div style={{top: "50%", marginTop: "-70px", position:"absolute", width:"100%"}}>
-              <CaptionView data={image} />
-              </div>
+            <ImageView images={image.images} />
+            <CaptionView data={image} />
             <CommentsView comments={image.comments} />
-            </div>
           </div>
         );
       });
@@ -69,16 +62,6 @@ $(function(){
           src={this.props.images.standard_resolution.url} />
       );
     },
-    componentDidMount: function(){
-
-      var $main = $('.main_image'),
-          $img = $(this.getDOMNode()),
-          w = $main.width(),
-          h = $main.height(),
-          offset = Math.round((h-w)/2);
-
-      $img.css('top', offset + 'px');
-    }
   });
 
   var CaptionView = React.createClass({
@@ -88,26 +71,23 @@ $(function(){
           user = data.user,
           caption = data.caption,
           caption_view,
-          class_name,
           created;
 
       if(caption === null){
         created = (""+new Date(data.created_time*1000))
           .split(' ').slice(0,5).join(' ');
         caption_view = (
-          <p id='caption'>Posted on {created}</p>
+          <p className='caption'>Posted on {created}</p>
         );
       } else {
-        class_name = (caption.text.length < 25) ? 'short' : '';
         caption_view = (
-          <p id='caption' className={class_name}>{caption.text}</p>
+          <p className='caption'>{caption.text}</p>
         );
       }
       return (
         <div className="comment">
           <img className="profile_picture" src={user.profile_picture} />
           {caption_view}
-          <CommentsCount count={count} />
         </div>
       );
     }
