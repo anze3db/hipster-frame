@@ -6,14 +6,12 @@ $(function(){
       $.getJSON(this.props.url, function(data){
         var new_date = parseInt(data[0].created_time),
             images = this.state.images,
-            old_date = parseInt(images ? this.state.images[0].created_time : "0");
+            old_date = parseInt(images ? images[0].created_time : "0");
         if(new_date > old_date){
           this.setState({images: data.slice(0,10)});
           window.scrollTo(0, 0);
         }
-
-        }.bind(this)
-      );
+      }.bind(this));
     },
     getInitialState: function() {
       return {};
