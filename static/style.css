@@ -1,9 +1,9 @@
 body {
-  margin: 0px;
   font-family: 'Poiret One', cursive;
   overflow-y:hidden;
-  background-color: #e6e6e6;
   color: #222;
+  background-color: #ededed;
+  font-size: 4.0vmin;
 }
 
 .post > img {
@@ -11,32 +11,17 @@ body {
 }
 
 .comment {
-  height: 52px;
-  margin: 0px 2px;
+  padding: 15px 0px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #fff;
 }
 
-.comment > p {
-  position: absolute;
-  left: 54px;
-  line-height: 24px;
-  margin: 0px;
-  padding: 0px;
-
+.comment div {
+  margin: -6px;
 }
 
-.comment > img {
-  position: absolute;
-  width: 48px;
-  height: 48px;
-}
-
-.comments_list{
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  background-color: #1a237e;
-  overflow-y: scroll;
-  overflow-x: hidden;
+.comment img {
+  width: 100%;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #fff;
 }

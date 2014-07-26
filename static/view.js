@@ -39,11 +39,10 @@ $(function(){
         };
 
         return (
-          <div className="post"
+          <div className="post row"
             onClick={toggleComments}>
             <ImageView images={image.images} />
             <CaptionView data={image} />
-            <CommentsView comments={image.comments} />
           </div>
         );
       });
@@ -85,9 +84,13 @@ $(function(){
         );
       }
       return (
-        <div className="comment">
+        <div className="comment clearfix">
+          <div className="col-xs-2">
           <img className="profile_picture" src={user.profile_picture} />
+          </div>
+          <div className="col-xs-10">
           {caption_view}
+          </div>
         </div>
       );
     }
