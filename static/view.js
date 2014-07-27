@@ -31,15 +31,14 @@ $(function(){
       var that = this,
           images;
 
-      images = $.map(this.state.images, function(image, i){
+      images = this.state.images.map(function(image, i){
 
         var toggleComments = function(){
           image.comments.show_comments = !image.comments.show_comments;
           that.forceUpdate();
         };
-
         return (
-          <div className="post row"
+          <div className="post row" key={image.id}
             onClick={toggleComments}>
             <ImageView images={image.images} />
             <CaptionView data={image} />
@@ -70,26 +69,46 @@ $(function(){
           user = data.user,
           caption = data.caption,
           caption_view,
-          created;
+          created,
+          likes,
+          heart,
+          ago = moment(data.created_time, 'X').fromNow();
 
       if(caption === null){
         created = (""+new Date(data.created_time*1000))
           .split(' ').slice(0,5).join(' ');
         caption_view = (
-          <p className='caption'>Posted on {created}</p>
+          <span className='caption'>Posted on {created}</span>
         );
       } else {
         caption_view = (
-          <p className='caption'>{caption.text}</p>
+          <span className='caption'>{caption.text}</span>
         );
       }
+
+      likes = data.likes.data.map(function(like){
+        return <a href={'http://instagram.com/' + user.username} key={like.id}>
+          {like.username} </a>;
+      });
+      heart = likes.length ? <i className="glyphicon glyphicon-heart"></i> :
+        <i className="glyphicon glyphicon-heart-empty"></i>;
+
       return (
         <div className="comment clearfix">
-          <div className="col-xs-2">
-          <img className="profile_picture" src={user.profile_picture} />
+          <div className="col-xs-12 likes">
+            {heart} {likes}
           </div>
-          <div className="col-xs-10">
-          {caption_view}
+          <div className="col-xs-12">
+            <img className="comment_picture"
+              src={user.profile_picture} />
+            <div className="comment_caption">
+              <a href={'http://instagram.com/' + user.username}>
+                {user.username}
+              </a> {caption_view}
+            </div>
+          </div>
+          <div className="col-xs-12 ago">
+            {ago}
           </div>
         </div>
       );
