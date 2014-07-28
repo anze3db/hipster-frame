@@ -2,15 +2,13 @@ body {
   font-family: 'Poiret One', cursive;
   overflow-y:hidden;
   color: #222;
-  background-color: #ddd;
+  background-color: #efefef;
   font-size: 22px;
 }
 
 .post {
-  position: fixed;
-  top: 40px;
-  left: 40px;
-  right: 40px;
+  margin: 20px 15px;
+  border: 1px solid #ccc;
 }
 
 .post > img {
