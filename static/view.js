@@ -8,7 +8,7 @@ $(function(){
             images = this.state.images,
             old_date = parseInt(images ? images[0].created_time : "0");
         if(new_date > old_date){
-          this.setState({images: data.slice(0,10).reverse()});
+          this.setState({images: data.slice(0,10)});
           window.scrollTo(0, 0);
         }
       }.bind(this));

@@ -7,8 +7,10 @@ body {
 }
 
 .post {
-  margin: 20px 15px;
+  margin: 10px -5px;
   border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .post > img {
