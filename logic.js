@@ -13,7 +13,7 @@ exports.retrieveLatest = function(resolve){
       returned_results = 0;
 
   function check(){
-    if(returned_results !== user_ids.length){
+    if(returned_results !== user_ids.length) {
       return;
     }
     results.sort(function(a,b){
