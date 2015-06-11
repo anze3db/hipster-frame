@@ -43,7 +43,7 @@ wss.on('connection', function(ws) {
         last_created_time = parseInt(latest.created_time);
       }
     });
-  }, 60000);
+  }, 10000);
 
   ws.on('close', function() {
       clearInterval(id);
