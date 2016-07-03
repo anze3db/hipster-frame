@@ -1,0 +1,21 @@
+db:
+  image: postgres:9.5
+  ports:
+   - "5432:5432"
+  environment:
+  - POSTGRES_USER=postgres
+  - POSTGRES_PASSWORD=postgres
+
+api:
+  build: api/
+  ports:
+   - "5000:5000"
+  volumes:
+   - "./api:/usr/src/app/"
+  links:
+   - db
+  environment:
+   # Add keys from https://www.instagram.com/developer/clients/manage/
+   - CLIENT_ID=
+   - CLIENT_SECRET=
+   - REDIRECT_URI=
