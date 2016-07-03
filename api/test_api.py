@@ -11,5 +11,5 @@ class ApiTestCase(unittest.TestCase):
         pass
 
     def test_hello_world(self):
-        response = self.app.get('/')
+        response = self.app.get("/")
         assert b"Hello World" in response.data
