@@ -6,6 +6,6 @@ WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY /api /usr/src/app
+COPY . /usr/src/app
 
-CMD python3 app.py
+CMD python3 -m unittest discover . && python3 api.py

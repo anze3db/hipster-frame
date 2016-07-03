@@ -3,6 +3,8 @@ import instagram
 
 app = Flask(__name__)
 
+instagram.setup(app)
+
 
 @app.route("/")
 def hello():
