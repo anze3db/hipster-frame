@@ -9,7 +9,7 @@ db:
 api:
   build: api/
   ports:
-   - "5000:5000"
+   - "8888:8888"
   volumes:
    - "./api:/usr/src/app/"
   links:

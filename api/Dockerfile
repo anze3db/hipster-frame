@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-CMD python3 -m unittest discover . && python3 api.py
+CMD pylint api & python3 -m unittest discover api && python3 api/api.py
