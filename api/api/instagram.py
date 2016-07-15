@@ -3,6 +3,9 @@ from urllib.parse import urlencode
 import tornado.ioloop
 import tornado.web
 from tornado.httpclient import AsyncHTTPClient
+import json
+import logging
+from users import insert_user
 
 
 INSTAGRAM_URI = "https://api.instagram.com/"
@@ -15,7 +18,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         self._check_env_variables()
         self.get_actions = {
             "callback": self._callback,
-            "authorize": self._authorize
+            "authorize": self._authorize,
         }
 
     async def get(self, action):
@@ -36,6 +39,9 @@ class InstagramHandler(tornado.web.RequestHandler):
         body = urlencode(params)
         response = await http_client.fetch(INSTAGRAM_OAUTH + "access_token",
                                            method="POST", body=body)
+        logging.debug(response.body)
+        res = insert_user(self.application.db,
+                          json.loads(response.body.decode("utf-8")))
         self.write(response.body)
         self.finish()
 

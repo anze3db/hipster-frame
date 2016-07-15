@@ -1,6 +1,7 @@
 import os
 import io
 from unittest.mock import patch
+from unittest.mock import MagicMock
 from tornado.httputil import url_concat
 from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
@@ -13,7 +14,9 @@ from api import make_app
 class InstagramTestCase(AsyncHTTPTestCase):
 
     def get_app(self):
-        return make_app(debug=False)
+        app = make_app(debug=False)
+        app.db = MagicMock()
+        return app
 
     def test_authorize(self):
         response = self.fetch("/instagram/authorize", follow_redirects=False)
@@ -27,7 +30,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
     def test_callback(self):
         with patch.object(InstagramHandler, '_get_client') as get_client:
             mock = get_client().fetch
-            setup_fetch(mock, 200, '{}')
+            setup_fetch(mock, 200, b'{"access_token": "smth.sadf", "user": {"username": "ensmotko", "bio": "I write code and surf waves", "website": "http://smotko.si", "profile_picture": "https://a.jpg", "full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
             url = url_concat("/instagram/callback", {"code": "mycode"})
             yield self.http_client.fetch(self.get_url(url))
             assert get_client.called
@@ -40,7 +43,7 @@ def setup_fetch(fetch_mock, status_code, body=None):
     def side_effect(request, **kwargs):
         if request is not HTTPRequest:
             request = HTTPRequest(request)
-        buffer = io.StringIO(body)
+        buffer = io.BytesIO(body)
         response = HTTPResponse(request, status_code, None, buffer)
         future = Future()
         future.set_result(response)
