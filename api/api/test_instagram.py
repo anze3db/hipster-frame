@@ -26,27 +26,41 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert len(os.environ.get("CLIENT_ID")) > 0
         assert os.environ.get("CLIENT_ID") in location
 
+    @patch('instagram.insert_user')
+    @patch.object(InstagramHandler, '_get_client')
     @gen_test
-    def test_callback(self):
-        with patch.object(InstagramHandler, '_get_client') as get_client:
-            mock = get_client().fetch
-            setup_fetch(mock, 200, b'{"access_token": "smth.sadf", "user": {"username": "ensmotko", "bio": "I write code and surf waves", "website": "http://smotko.si", "profile_picture": "https://a.jpg", "full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
-            url = url_concat("/instagram/callback", {"code": "mycode"})
-            yield self.http_client.fetch(self.get_url(url))
-            assert get_client.called
-            assert mock.called
-            args, kwargs = mock.call_args
-            assert "code=mycode" in kwargs["body"]
+    def test_callback(self, get_client, insert_user):
+        mock = get_client().fetch
+        a = MagicMock()
+        a.fetchone.return_value = (1,)
+        mock.side_effect = get_fetch_side_effect(
+            mock, 200,
+            b'{"access_token": "smth.sadf", "user": {"username": "ensmotko",'
+            b'"bio": "I write code and surf waves", "website": '
+            b'"http://smotko.si", "profile_picture": "https://a.jpg",'
+            b'"full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
+        insert_user.side_effect = lambda db, data: setup_future(a)
+        url = url_concat("/instagram/callback", {"code": "mycode"})
+        yield self.http_client.fetch(self.get_url(url))
+        assert get_client.called
+        assert mock.called
+        assert insert_user.called
+        assert a.fetchone.called
+        args, kwargs = mock.call_args
+        assert "code=mycode" in kwargs["body"]
 
 
-def setup_fetch(fetch_mock, status_code, body=None):
+def setup_future(result):
+    future = Future()
+    future.set_result(result)
+    return future
+
+
+def get_fetch_side_effect(fetch_mock, status_code, body=None):
     def side_effect(request, **kwargs):
         if request is not HTTPRequest:
             request = HTTPRequest(request)
         buffer = io.BytesIO(body)
         response = HTTPResponse(request, status_code, None, buffer)
-        future = Future()
-        future.set_result(response)
-        return future
-
-    fetch_mock.side_effect = side_effect
+        return setup_future(response)
+    return side_effect

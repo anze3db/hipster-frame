@@ -19,3 +19,5 @@ api:
    - CLIENT_ID=
    - CLIENT_SECRET=
    - REDIRECT_URI=
+   # Secret key used for secure cookies
+   - SECRET_KEY=

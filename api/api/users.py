@@ -18,5 +18,6 @@ def insert_user(db, data):
                       (%(access_token)s, %(username)s, %(bio)s,
                        %(website)s, %(profile_picture)s, %(full_name)s,
                        current_timestamp)
-        WHERE users.instagram_id = %(id)s;
+        WHERE users.instagram_id = %(id)s
+        RETURNING id;
         """, user)

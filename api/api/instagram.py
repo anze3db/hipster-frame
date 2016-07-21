@@ -19,6 +19,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.get_actions = {
             "callback": self._callback,
             "authorize": self._authorize,
+            "logout": self._logout,
         }
 
     async def get(self, action):
@@ -26,6 +27,10 @@ class InstagramHandler(tornado.web.RequestHandler):
             self.send_error(404)
             return
         await self.get_actions[action]()
+
+    async def _logout(self):
+        self.clear_cookie("auth")
+        self.redirect("/")
 
     async def _callback(self):
         http_client = self._get_client()
@@ -39,11 +44,12 @@ class InstagramHandler(tornado.web.RequestHandler):
         body = urlencode(params)
         response = await http_client.fetch(INSTAGRAM_OAUTH + "access_token",
                                            method="POST", body=body)
-        logging.debug(response.body)
-        res = insert_user(self.application.db,
-                          json.loads(response.body.decode("utf-8")))
-        self.write(response.body)
-        self.finish()
+        cursor = await insert_user(self.application.db,
+                                   json.loads(response.body.decode("utf-8")))
+        res, = cursor.fetchone()
+        self.set_secure_cookie("auth", str(res))
+
+        self.redirect('/')
 
     async def _authorize(self):
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +

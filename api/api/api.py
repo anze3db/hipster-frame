@@ -18,14 +18,17 @@ DBARGS = {
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("<a href='/instagram/authorize'>Authorize</a>")
+        if self.get_secure_cookie("auth"):
+            self.write("Authorized <a href='/instagram/logout'>Logout</a>")
+        else:
+            self.write("<a href='/instagram/authorize'>Authorize</a>")
 
 
 def make_app(debug=False):
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/instagram/(?P<action>[\w]+)/?", InstagramHandler)
-    ], debug=debug)
+    ], debug=debug, cookie_secret=os.environ.get("CLIENT_ID"))
 
 
 def init_db(app, ioloop):
@@ -39,6 +42,8 @@ def init_db(app, ioloop):
     # this is a one way to run ioloop in sync
     future = app.db.connect()
     ioloop.add_future(future, lambda f: ioloop.stop())
+    ioloop.start()
+    future.result()  # raises exception on connection error
 
 
 def init_migrations(rollback=False):
