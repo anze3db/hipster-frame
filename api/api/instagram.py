@@ -1,4 +1,5 @@
 import os
+import logging
 from urllib.parse import urlencode
 import tornado.ioloop
 import tornado.web
@@ -6,10 +7,12 @@ from tornado.httpclient import AsyncHTTPClient
 import json
 import logging
 from users import insert_user
+from users import response_to_user
 
 
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
+INSTAGRAM_MEDIA = INSTAGRAM_URI + "v1/users/self/media/recent?access_token="
 REQUIRED_ENV_VARS = ("CLIENT_ID", "CLIENT_SECRET", "REDIRECT_URI")
 
 
@@ -44,11 +47,13 @@ class InstagramHandler(tornado.web.RequestHandler):
         body = urlencode(params)
         response = await http_client.fetch(INSTAGRAM_OAUTH + "access_token",
                                            method="POST", body=body)
-        cursor = await insert_user(self.application.db,
-                                   json.loads(response.body.decode("utf-8")))
+        data = json.loads(response.body.decode("utf-8"))
+        user = response_to_user(data)
+        cursor = await insert_user(self.application.db, user)
         res, = cursor.fetchone()
         self.set_secure_cookie("auth", str(res))
-
+        ioloop = tornado.ioloop.IOLoop.current()
+        ioloop.spawn_callback(self._fetch_media, user)
         self.redirect('/')
 
     async def _authorize(self):
@@ -68,3 +73,11 @@ class InstagramHandler(tornado.web.RequestHandler):
             val = os.environ.get(key)
             if not len(val):
                 raise Exception("Environment variable {} not set".format(key))
+
+    async def _fetch_media(self, user):
+        http_client = self._get_client()
+        response = await http_client.fetch(
+            INSTAGRAM_MEDIA + user.get("access_token"),
+            method="GET")
+        media = json.loads(response.body.decode("utf-8"))
+        logging.info((media.get('data')[0]))

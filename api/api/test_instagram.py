@@ -26,10 +26,11 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert len(os.environ.get("CLIENT_ID")) > 0
         assert os.environ.get("CLIENT_ID") in location
 
+    @patch('instagram._fetch_images')
     @patch('instagram.insert_user')
     @patch.object(InstagramHandler, '_get_client')
     @gen_test
-    def test_callback(self, get_client, insert_user):
+    def test_callback(self, get_client, insert_user, _fetch_images):
         mock = get_client().fetch
         a = MagicMock()
         a.fetchone.return_value = (1,)
@@ -46,6 +47,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert mock.called
         assert insert_user.called
         assert a.fetchone.called
+        assert _fetch_images.called
         args, kwargs = mock.call_args
         assert "code=mycode" in kwargs["body"]
 

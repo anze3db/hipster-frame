@@ -1,5 +1,5 @@
 #
-# file: migrations/0001.create-foo.py
+# file: migrations/0001.create-users.py
 #
 from yoyo import step
 

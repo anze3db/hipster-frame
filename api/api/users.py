@@ -1,8 +1,10 @@
-
-
-def insert_user(db, data):
+def response_to_user(data):
     user = data.get("user")
     user["access_token"] = data["access_token"]
+    return user
+
+
+def insert_user(db, user):
     return db.execute(
         """
         INSERT INTO users (instagram_id, access_token, username, bio,
