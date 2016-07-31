@@ -8,7 +8,9 @@ import json
 import logging
 from users import insert_user
 from users import response_to_user
-
+from users import get_user
+from media import response_to_media
+from media import insert_media
 
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
@@ -22,6 +24,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.get_actions = {
             "callback": self._callback,
             "authorize": self._authorize,
+            "media": self._media,
             "logout": self._logout,
         }
 
@@ -63,6 +66,13 @@ class InstagramHandler(tornado.web.RequestHandler):
                       REDIRECT_URI=os.environ.get("REDIRECT_URI"))
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
+    async def _media(self):
+        id_ = self.get_secure_cookie("auth")
+        logging.info(self.get_secure_cookie("auth"))
+        cursor = await get_user(self.application.db, id_)
+        user = cursor.fetchone()
+        response = await self._fetch_media(user)
+
     def _get_client(self):
         return AsyncHTTPClient()
 
@@ -80,4 +90,6 @@ class InstagramHandler(tornado.web.RequestHandler):
             INSTAGRAM_MEDIA + user.get("access_token"),
             method="GET")
         media = json.loads(response.body.decode("utf-8"))
-        logging.info((media.get('data')[0]))
+        to_insert = list(response_to_media(data, user.get('id')) for data in
+                         media.get('data', []))
+        await insert_media(self.application.db, to_insert)

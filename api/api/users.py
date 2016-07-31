@@ -23,3 +23,12 @@ def insert_user(db, user):
         WHERE users.instagram_id = %(id)s
         RETURNING id;
         """, user)
+
+
+def get_user(db, id_):
+    # TODO: Querying the database like this might not be ideal
+    id_ = int(id_)
+    return db.execute(
+        """
+        SELECT * from users where id = %s;
+        """, (id_,))

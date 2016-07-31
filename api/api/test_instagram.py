@@ -26,29 +26,29 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert len(os.environ.get("CLIENT_ID")) > 0
         assert os.environ.get("CLIENT_ID") in location
 
-    @patch('instagram._fetch_images')
     @patch('instagram.insert_user')
     @patch.object(InstagramHandler, '_get_client')
     @gen_test
-    def test_callback(self, get_client, insert_user, _fetch_images):
-        mock = get_client().fetch
-        a = MagicMock()
-        a.fetchone.return_value = (1,)
-        mock.side_effect = get_fetch_side_effect(
-            mock, 200,
+    def test_callback(self, get_client, insert_user):
+        fetch_mock = get_client().fetch
+        db_mock = MagicMock()
+        db_mock.fetchone.return_value = (1,)
+        fetch_mock.side_effect = get_fetch_side_effect(
+            fetch_mock, 200,
             b'{"access_token": "smth.sadf", "user": {"username": "ensmotko",'
             b'"bio": "I write code and surf waves", "website": '
             b'"http://smotko.si", "profile_picture": "https://a.jpg",'
             b'"full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
-        insert_user.side_effect = lambda db, data: setup_future(a)
+        insert_user.side_effect = lambda db, data: setup_future(db_mock)
         url = url_concat("/instagram/callback", {"code": "mycode"})
         yield self.http_client.fetch(self.get_url(url))
+
         assert get_client.called
-        assert mock.called
         assert insert_user.called
-        assert a.fetchone.called
-        assert _fetch_images.called
-        args, kwargs = mock.call_args
+        assert db_mock.fetchone.called
+        assert len(fetch_mock.call_args_list) == 2, \
+            'get acess_token and media'
+        args, kwargs = fetch_mock.call_args_list[0]
         assert "code=mycode" in kwargs["body"]
 
 

@@ -4,6 +4,7 @@ import os
 import tornado.ioloop
 import tornado.web
 import tornado.options
+import psycopg2
 from instagram import InstagramHandler
 from yoyo import read_migrations
 from yoyo import get_backend
@@ -37,6 +38,7 @@ def init_db(app, ioloop):
              'host={host} port={port}').format(**DBARGS),
         size=1,
         ioloop=ioloop,
+        cursor_factory=psycopg2.extras.DictCursor
     )
 
     # this is a one way to run ioloop in sync
@@ -58,7 +60,7 @@ def init_migrations(rollback=False):
 if __name__ == "__main__":
     app = make_app(debug=True)
     tornado.options.parse_command_line()  # this will make sure loggine=debug will actually work
-    init_migrations(rollback=True)
+    init_migrations(rollback=False)
     ioloop = tornado.ioloop.IOLoop.current()
     init_db(app, ioloop)
     app.listen(8888)
