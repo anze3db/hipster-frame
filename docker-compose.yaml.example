@@ -3,8 +3,15 @@ db:
   ports:
    - "5432:5432"
   environment:
-  - POSTGRES_USER=postgres
-  - POSTGRES_PASSWORD=postgres
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=postgres
+
+frontend:
+  build: frontend
+  ports:
+   - "3000:3000"
+  volumes:
+   - "./frontend:/usr/src/app/"
 
 api:
   build: api/
