@@ -4,7 +4,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.options
 import psycopg2
-from instagram import InstagramHandler
+from endpoints.instagram import InstagramHandler
 from yoyo import read_migrations
 from yoyo import get_backend
 

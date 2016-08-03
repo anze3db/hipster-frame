@@ -7,7 +7,7 @@ from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
 from tornado.testing import gen_test
 from tornado.httpclient import HTTPRequest, HTTPResponse
-from instagram import InstagramHandler
+from endpoints.instagram import InstagramHandler
 from api import make_app
 
 
@@ -26,7 +26,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert len(os.environ.get("CLIENT_ID")) > 0
         assert os.environ.get("CLIENT_ID") in location
 
-    @patch('instagram.insert_user')
+    @patch('endpoints.instagram.insert_user')
     @patch.object(InstagramHandler, '_get_client')
     @gen_test
     def test_callback(self, get_client, insert_user):

@@ -6,11 +6,11 @@ import tornado.web
 from tornado.httpclient import AsyncHTTPClient
 import json
 import logging
-from users import insert_user
-from users import response_to_user
-from users import get_user
-from media import response_to_media
-from media import insert_media
+from models.users import insert_user
+from models.users import response_to_user
+from models.users import get_user
+from models.media import response_to_media
+from models.media import insert_media
 
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
