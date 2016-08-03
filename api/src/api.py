@@ -1,5 +1,4 @@
 import momoko
-import logging
 import os
 import tornado.ioloop
 import tornado.web
@@ -51,7 +50,7 @@ def init_db(app, ioloop):
 def init_migrations(rollback=False):
     backend = get_backend(
         'postgres://{user}:{password}@{host}/postgres'.format(**DBARGS))
-    migrations = read_migrations('api/migrations')
+    migrations = read_migrations('src/migrations')
     if rollback:
         backend.rollback_migrations(backend.to_rollback(migrations))
     backend.apply_migrations(backend.to_apply(migrations))
@@ -59,7 +58,7 @@ def init_migrations(rollback=False):
 
 if __name__ == "__main__":
     app = make_app(debug=True)
-    tornado.options.parse_command_line()  # this will make sure loggine=debug will actually work
+    tornado.options.parse_command_line()
     init_migrations(rollback=False)
     ioloop = tornado.ioloop.IOLoop.current()
     init_db(app, ioloop)

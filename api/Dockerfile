@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-CMD python3 -m unittest discover api && python3 api/api.py --logging=debug
+CMD python3 -m unittest discover src && python3 src/api.py --logging=debug
