@@ -12,6 +12,7 @@ from models.users import get_user
 from models.media import response_to_media
 from models.media import insert_media
 
+REDIRECT_URI = os.environ.get("SERVER_URI")
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
 INSTAGRAM_MEDIA = INSTAGRAM_URI + "v1/users/self/media/recent?access_token="
@@ -36,7 +37,7 @@ class InstagramHandler(tornado.web.RequestHandler):
 
     async def _logout(self):
         self.clear_cookie("auth")
-        self.redirect("/")
+        self.redirect(REDIRECT_URI)
 
     async def _callback(self):
         http_client = self._get_client()
@@ -57,7 +58,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.set_secure_cookie("auth", str(res))
         ioloop = tornado.ioloop.IOLoop.current()
         ioloop.spawn_callback(self._fetch_media, user)
-        self.redirect('/')
+        self.redirect(REDIRECT_URI)
 
     async def _authorize(self):
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +

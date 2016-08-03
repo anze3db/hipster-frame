@@ -19,7 +19,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
         return app
 
     def test_authorize(self):
-        response = self.fetch("/instagram/authorize", follow_redirects=False)
+        response = self.fetch("/api/instagram/authorize", follow_redirects=False)
         location = response.headers.get("location")
         assert response.code == 302, str(response.code) + " Not a redirect"
         assert "https://api.instagram.com/oauth/authorize/" in location
@@ -27,6 +27,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert os.environ.get("CLIENT_ID") in location
 
     @patch('endpoints.instagram.insert_user')
+    @patch('endpoints.instagram.REDIRECT_URI', '/api/')
     @patch.object(InstagramHandler, '_get_client')
     @gen_test
     def test_callback(self, get_client, insert_user):
@@ -40,7 +41,7 @@ class InstagramTestCase(AsyncHTTPTestCase):
             b'"http://smotko.si", "profile_picture": "https://a.jpg",'
             b'"full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
         insert_user.side_effect = lambda db, data: setup_future(db_mock)
-        url = url_concat("/instagram/callback", {"code": "mycode"})
+        url = url_concat("/api/instagram/callback", {"code": "mycode"})
         yield self.http_client.fetch(self.get_url(url))
 
         assert get_client.called

@@ -26,8 +26,8 @@ class MainHandler(tornado.web.RequestHandler):
 
 def make_app(debug=False):
     return tornado.web.Application([
-        (r"/", MainHandler),
-        (r"/instagram/(?P<action>[\w]+)/?", InstagramHandler)
+        (r"/api/", MainHandler),
+        (r"/api/instagram/(?P<action>[\w]+)/?", InstagramHandler)
     ], debug=debug, cookie_secret=os.environ.get("CLIENT_ID"))
 
 
