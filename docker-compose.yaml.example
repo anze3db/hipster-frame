@@ -1,4 +1,5 @@
 db:
+  tty: true
   image: postgres:9.5
   ports:
    - "5432:5432"
@@ -14,6 +15,7 @@ frontend:
    - "./frontend:/usr/src/app/"
 
 api:
+  tty: true
   build: api/
   ports:
    - "8888:8888"
@@ -28,3 +30,12 @@ api:
    - REDIRECT_URI=
    # Secret key used for secure cookies
    - SECRET_KEY=
+   - SERVER_URI=http://localhost:8080
+
+nginx:
+  build: nginx
+  ports:
+   - "8080:80"
+  links:
+   - frontend
+   - api
