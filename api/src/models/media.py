@@ -36,3 +36,11 @@ async def insert_media(db, data):
         WHERE media.media_id = EXCLUDED.media_id
         RETURNING id;
         """.format(args_str))
+
+
+def get_media(db, id_):
+    return db.execute(
+        """
+        SELECT * FROM media WHERE user_id = %s
+        ORDER BY media_created_time DESC;
+        """, (id_, ))
