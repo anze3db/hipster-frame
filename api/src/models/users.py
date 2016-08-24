@@ -1,6 +1,8 @@
 def response_to_user(data):
     user = data.get("user")
     user["access_token"] = data["access_token"]
+    user["instagram_id"] = user["id"]
+    user["id"] = None
     return user
 
 
@@ -10,7 +12,7 @@ def insert_user(db, user):
         INSERT INTO users (instagram_id, access_token, username, bio,
                            website, profile_picture, full_name,
                            created_at)
-        VALUES (%(id)s, %(access_token)s, %(username)s, %(bio)s,
+        VALUES (%(instagram_id)s, %(access_token)s, %(username)s, %(bio)s,
                 %(website)s, %(profile_picture)s, %(full_name)s,
                 current_timestamp)
         ON CONFLICT (instagram_id)
@@ -20,7 +22,7 @@ def insert_user(db, user):
                       (%(access_token)s, %(username)s, %(bio)s,
                        %(website)s, %(profile_picture)s, %(full_name)s,
                        current_timestamp)
-        WHERE users.instagram_id = %(id)s
+        WHERE users.instagram_id = %(instagram_id)s
         RETURNING id;
         """, user)
 
