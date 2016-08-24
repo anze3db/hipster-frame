@@ -1,16 +1,15 @@
 import os
-import logging
 from urllib.parse import urlencode
 import tornado.ioloop
 import tornado.web
 from tornado.httpclient import AsyncHTTPClient
 import json
-import logging
 from models.users import insert_user
 from models.users import response_to_user
 from models.users import get_user
 from models.media import response_to_media
 from models.media import insert_media
+from models.media import get_media
 
 REDIRECT_URI = os.environ.get("SERVER_URI")
 INSTAGRAM_URI = "https://api.instagram.com/"
@@ -69,11 +68,10 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
     async def _media(self):
-        id_ = self.get_secure_cookie("auth")
-        logging.info(self.get_secure_cookie("auth"))
-        cursor = await get_user(self.application.db, id_)
-        user = cursor.fetchone()
-        response = await self._fetch_media(user)
+        id_ = int(self.get_secure_cookie("auth"))
+        cursor = await get_media(self.application.db, id_)
+        response = cursor.fetchall()
+        self.write(json.dumps(response, default=lambda x: str(x)))
 
     def _get_client(self):
         return AsyncHTTPClient()
