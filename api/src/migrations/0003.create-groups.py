@@ -3,9 +3,7 @@
 #
 from yoyo import step
 
-# TODO: This needs to depend on 0002 instead of 0001 or else rollback won't
-# work, issue reported: http://goo.gl/UXo0fg
-__depends__ = ['0002.create-media']
+__depends__ = ['0001.create-users']
 
 step(
     """
