@@ -32,6 +32,17 @@ api:
    - SECRET_KEY=
    - SERVER_URI=http://localhost:8080
 
+graphql:
+  build: graphql/
+  ports:
+   - "8889:8889"
+  volumes:
+   - "./graphql:/usr/src/app/"
+  links:
+   - db
+  environment:
+   - SERVER_URI=http://localhost:8080
+
 nginx:
   build: nginx
   ports:
@@ -39,3 +50,4 @@ nginx:
   links:
    - frontend
    - api
+   - graphql
