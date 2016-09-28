@@ -14,19 +14,54 @@ const db = pgp(connection);
 
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(`
+  input GroupInput {
+    title: String!,
+    description: String
+  }
+  type Group {
+    id: ID!,
+    title: String!,
+    description: String,
+    created_at: String!,
+    updated_at: String
+  }
+
   type Query {
-    hello: String
+    groups(limit: Int = 10, offset: Int = 0): [Group]
+  }
+  type Mutation {
+    addGroup(input: GroupInput): Group,
+    updateGroup(id: ID!, input: GroupInput): Group
   }
 `);
 
 // The root provides a resolver function for each API endpoint
 const root = {
-  hello: () => {
-    return db.any("SELECT * from groups;")
-    .then(function (data) {
-        return data[0].title
-    });
+  groups: (args) => {
+    return db.any("SELECT * from groups LIMIT $1 OFFSET $2;", [
+      args.limit,
+      args.offset
+    ])
   },
+  addGroup: (args) => {
+    return db.one(`
+      INSERT INTO groups (title, description, created_at)
+      VALUES ($1, $2, NOW())
+      RETURNING *`, [
+        args.input.title,
+        args.input.description
+      ])
+  },
+  updateGroup: (args) => {
+    return db.one(`
+      UPDATE groups SET title = $1, description = $2, updated_at = NOW()
+      WHERE id = $3
+      RETURNING *;`, [
+        args.input.title,
+        args.input.description,
+        args.id
+      ]);
+  }
 };
 
 const app = express();
