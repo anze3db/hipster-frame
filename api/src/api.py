@@ -9,10 +9,10 @@ from yoyo import read_migrations
 from yoyo import get_backend
 
 DBARGS = {
-    'password': os.environ.get('DB_ENV_POSTGRES_PASSWORD'),
-    'user': os.environ.get('DB_ENV_POSTGRES_USER'),
-    'port': os.environ.get('DB_PORT_5432_TCP_PORT'),
-    'host': os.environ.get('DB_PORT_5432_TCP_ADDR')
+    'password': os.environ.get('DB_PASSWORD'),
+    'user': os.environ.get('DB_USERNAME'),
+    'port': os.environ.get('DB_PORT'),
+    'host': os.environ.get('DB_HOST')
 }
 
 

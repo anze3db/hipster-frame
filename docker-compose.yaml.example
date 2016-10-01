@@ -1,53 +1,59 @@
-db:
-  tty: true
-  image: postgres:9.5
-  ports:
-   - "5432:5432"
-  environment:
-   - POSTGRES_USER=postgres
-   - POSTGRES_PASSWORD=postgres
+version: '2'
+services:
+  db:
+    tty: true
+    image: postgres:9.5
+    ports:
+     - "5432:5432"
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
 
-frontend:
-  build: frontend
-  ports:
-   - "3000:3000"
-  volumes:
-   - "./frontend:/usr/src/app/"
+  frontend:
+    build: frontend
+    ports:
+     - "3000:3000"
+    volumes:
+     - "./frontend:/usr/src/app/"
 
-api:
-  tty: true
-  build: api/
-  ports:
-   - "8888:8888"
-  volumes:
-   - "./api:/usr/src/app/"
-  links:
-   - db
-  environment:
-   # Add keys from https://www.instagram.com/developer/clients/manage/
-   - CLIENT_ID=
-   - CLIENT_SECRET=
-   - REDIRECT_URI=
-   # Secret key used for secure cookies
-   - SECRET_KEY=
-   - SERVER_URI=http://localhost:8080
+  api:
+    tty: true
+    build: api/
+    ports:
+     - "8888:8888"
+    volumes:
+     - "./api:/usr/src/app/"
+    links:
+     - db
+    environment:
+     - DB_PASSWORD=postgres
+     - DB_USERNAME=postgres
+     - DB_HOST=db
+     - DB_PORT=5432
+     # Add keys from https://www.instagram.com/developer/clients/manage/
+     - CLIENT_ID=
+     - CLIENT_SECRET=
+     - REDIRECT_URI=
+     # Secret key used for secure cookies
+     - SECRET_KEY=
+     - SERVER_URI=http://localhost:8080
 
-graphql:
-  build: graphql/
-  ports:
-   - "8889:8889"
-  volumes:
-   - "./graphql:/usr/src/app/"
-  links:
-   - db
-  environment:
-   - SERVER_URI=http://localhost:8080
+  graphql:
+    build: graphql/
+    ports:
+     - "8889:8889"
+    volumes:
+     - "./graphql:/usr/src/app/"
+    links:
+     - db
+    environment:
+     - SERVER_URI=http://localhost:8080
 
-nginx:
-  build: nginx
-  ports:
-   - "8080:80"
-  links:
-   - frontend
-   - api
-   - graphql
+  nginx:
+    build: nginx
+    ports:
+     - "8080:80"
+    links:
+     - frontend
+     - api
+     - graphql
