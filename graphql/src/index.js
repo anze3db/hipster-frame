@@ -4,10 +4,10 @@ const { buildSchema } = require('graphql');
 
 const pgp = require('pg-promise')();
 const connection = {
-  user: process.env.DB_ENV_POSTGRES_USER,
-  password: process.env.DB_ENV_POSTGRES_PASSWORD,
-  host: process.env.DB_PORT_5432_TCP_ADDR,
-  port: process.env.DB_PORT_5432_TCP_PORT,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   database: 'postgres',
 };
 const db = pgp(connection);
