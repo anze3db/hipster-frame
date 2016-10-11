@@ -43,7 +43,7 @@ services:
     ports:
      - "8889:8889"
     volumes:
-     - "./graphql:/usr/src/app/"
+     - "./graphql/src:/usr/src/app/src"
     links:
      - db
     environment:

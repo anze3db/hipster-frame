@@ -50,7 +50,7 @@ const root = {
       args.offset,
       args.orderBy[0].sort,
       args.orderBy[0].direction
-    ])
+    ]);
   },
   addGroup: (args) => {
     return db.one(`
