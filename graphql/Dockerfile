@@ -9,4 +9,4 @@ RUN npm install
 
 COPY src/index.js /usr/src/app/src
 
-CMD [ "node_modules/.bin/supervisor", "index.js" ]
+CMD [ "node_modules/.bin/nodemon", "src/index.js" ]
