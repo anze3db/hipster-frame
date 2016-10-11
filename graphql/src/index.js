@@ -15,12 +15,6 @@ const db = pgp(connection);
 // Construct a schema, using GraphQL schema language
 const schema = buildSchema(`
 
-  input Ordering {
-    sort: String! = "id"
-    direction: Direction! = ASC
-  }
-  enum Direction { ASC, DESC }
-
   input GroupInput {
     title: String!,
     description: String
@@ -34,7 +28,7 @@ const schema = buildSchema(`
   }
 
   type Query {
-    groups(limit: Int = 10, offset: Int = 0, orderBy: [Ordering!]): [Group]
+    groups(first: Int = 10, after: Int = 0): [Group]
   }
   type Mutation {
     addGroup(input: GroupInput): Group,
@@ -45,11 +39,9 @@ const schema = buildSchema(`
 // The root provides a resolver function for each API endpoint
 const root = {
   groups: (args) => {
-    return db.any("SELECT * from groups ORDER BY $3:name $4:raw LIMIT $1 OFFSET $2;", [
-      args.limit,
-      args.offset,
-      args.orderBy[0].sort,
-      args.orderBy[0].direction
+    return db.any("SELECT * from groups LIMIT $1 OFFSET $2;", [
+      args.first,
+      args.after
     ]);
   },
   addGroup: (args) => {
