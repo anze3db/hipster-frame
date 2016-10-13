@@ -24,7 +24,11 @@ const schema = buildSchema(`
     title: String!,
     description: String,
     created_at: String!,
-    updated_at: String
+    updated_at: String,
+    pageInfo: PageInfo
+  }
+  type PageInfo {
+    hasNextPage: Boolean!
   }
 
   type Query {
@@ -39,10 +43,22 @@ const schema = buildSchema(`
 // The root provides a resolver function for each API endpoint
 const root = {
   groups: (args) => {
-    return db.any("SELECT * from groups LIMIT $1 OFFSET $2;", [
+    return db.any(`
+        SELECT
+          g.*,
+          EXISTS(SELECT * FROM groups as gg WHERE gg.id > g.id) AS hasNextPage
+        FROM groups as g WHERE id > $2 LIMIT $1;`, [
       args.first,
       args.after
-    ]);
+    ]).then((result) => {
+      return result.map((res) => {
+        res.pageInfo = {
+          hasNextPage: res.hasnextpage
+        };
+        delete res.hasnextpage;
+        return res;
+      })
+    });
   },
   addGroup: (args) => {
     return db.one(`
