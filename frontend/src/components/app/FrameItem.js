@@ -11,7 +11,7 @@ class FrameList extends Component {
         </CardMedia>
         <CardHeader
           title={item.user.full_name}
-          subtitle={item.caption.text}
+          subtitle={item.caption ? item.caption.text : 'No caption'}
           avatar={item.user.profile_picture}
         />
       </Card>
