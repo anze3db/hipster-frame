@@ -26,9 +26,7 @@ class App extends Component {
       this.setState({
         media
       })
-    }).catch(() => {
-      console.error("Even less OK");
-    });
+    })
   }
 
   componentWillUnmount() {
