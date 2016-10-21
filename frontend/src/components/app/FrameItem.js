@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
-import {Card, CardHeader, CardMedia} from 'material-ui/Card';
+import {GridTile} from 'material-ui/GridList';
 
 class FrameList extends Component {
   render() {
     const item = this.props.item;
     return (
-      <Card>
-        <CardMedia>
-          <img src={item.images.standard_resolution.url} alt="alt" />
-        </CardMedia>
-        <CardHeader
-          title={item.user.full_name}
-          subtitle={item.caption ? item.caption.text : 'No caption'}
-          avatar={item.user.profile_picture}
-        />
-      </Card>
+      <GridTile
+          key={item.images.standard_resolution.url}
+        >
+        <img src={item.images.standard_resolution.url} />
+      </GridTile>
     );
   }
 }
