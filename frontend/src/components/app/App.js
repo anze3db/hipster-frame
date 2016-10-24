@@ -3,15 +3,13 @@ import AppBar from './AppBar';
 import Frame from './Frame';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       media: []
     };
   }
-
-  componentDidMount() {
+  mountData() {
     this.request = fetch('/api/instagram/media', {
       credentials: 'same-origin'
     }).then((response) => {
@@ -25,15 +23,16 @@ class App extends Component {
     }).then((media) => {
       this.setState({
         media
-      })
-    })
+      });
+    });
   }
-
+  componentDidMount() {
+    this.mountData();
+  }
   componentWillUnmount() {
     // Should abort the request here, but can't because ES2015 promises
     // can't be cancelled :(
   }
-
   render() {
     return (
       <div className="App">
