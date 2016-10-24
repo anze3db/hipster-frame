@@ -8,7 +8,7 @@ class FrameList extends Component {
       <GridTile
           key={item.images.standard_resolution.url}
         >
-        <img src={item.images.standard_resolution.url} />
+        <img src={item.images.standard_resolution.url} role="presentation" />
       </GridTile>
     );
   }
