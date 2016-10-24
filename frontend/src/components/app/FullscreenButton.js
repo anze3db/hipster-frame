@@ -6,7 +6,7 @@ class FullscreenButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFullscreen: false
+      isFullscreen: document.webkitIsFullScreen
     }
   }
   fullscreen() {
@@ -18,6 +18,7 @@ class FullscreenButton extends Component {
   }
   changeFullscreen() {
     this.setState({isFullscreen: document.webkitIsFullScreen});
+    this.props.onFullScreenChange(document.webkitIsFullScreen);
   }
   componentDidMount() {
     document.onwebkitfullscreenchange = this.changeFullscreen.bind(this);

@@ -6,14 +6,37 @@ import AppBar from 'material-ui/AppBar';
 import FullscreenButton from './FullscreenButton';
 
 class InstAppBar extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      fullscreen: false
+    };
+  }
+
+  fullscreenChange(isFullScreen) {
+    this.setState({
+      fullscreen: isFullScreen
+    });
+  }
+
   render() {
+    let styles = {}
+    if (this.state.fullscreen) {
+      styles = {
+        display: 'none'
+      };
+    }
     return (
       <AppBar
+        style={styles}
         title="Hipster Frame"
         iconElementLeft={<IconButton iconClassName="material-icons">photo_camera</IconButton>}
         iconElementRight={
           <div>
-            <FullscreenButton></FullscreenButton>
+            <FullscreenButton
+              onFullScreenChange={this.fullscreenChange.bind(this)}>
+            </FullscreenButton>
             <IconMenu
               anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
