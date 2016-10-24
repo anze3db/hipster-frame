@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AppBar from './AppBar';
-import FrameList from './FrameList';
+import Frame from './Frame';
 
 class App extends Component {
 
@@ -38,7 +38,7 @@ class App extends Component {
     return (
       <div className="App">
         <AppBar />
-        <FrameList list={this.state.media} />
+        <Frame media={this.state.media} />
       </div>
     );
   }

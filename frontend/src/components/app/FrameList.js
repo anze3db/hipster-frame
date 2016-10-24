@@ -23,7 +23,7 @@ class FrameList extends Component {
           style={styles.gridList}
           >
           {this.props.list.map((item) =>
-            <FrameItem item={item} key={item.id}/>
+            <FrameItem item={item} key={item.id} onClick={() => this.props.onItemSelect(item)}/>
           )}
         </GridList>
       </div>

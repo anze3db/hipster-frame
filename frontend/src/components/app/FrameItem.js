@@ -5,9 +5,7 @@ class FrameList extends Component {
   render() {
     const item = this.props.item;
     return (
-      <GridTile
-          key={item.images.standard_resolution.url}
-        >
+      <GridTile key={item.images.standard_resolution.url} onClick={this.props.onClick}>
         <img src={item.images.standard_resolution.url} role="presentation" />
       </GridTile>
     );
