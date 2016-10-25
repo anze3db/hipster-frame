@@ -16,16 +16,12 @@ const styles = {
 class FrameList extends Component {
   render() {
     return (
-      <div style={styles.root}>
-        <GridList
-          cellHeight={160}
-          cols={5}
-          style={styles.gridList}
-          >
-          {this.props.list.map((item) =>
-            <FrameItem item={item} key={item.id} onClick={() => this.props.onItemSelect(item)}/>
-          )}
-        </GridList>
+      <div
+        className="grid"
+        >
+        {this.props.list.map((item) =>
+          <FrameItem item={item} key={item.id} onClick={() => this.props.onItemSelect(item)}/>
+        )}
       </div>
     );
   }
