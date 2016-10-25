@@ -22,10 +22,13 @@ class Frame extends Component {
   render() {
     return (
       this.state.item ?
-      <img
-        src={this.state.item.images.standard_resolution.url}
-        role="presentation"
-        onClick={this.onItemDeselect.bind(this)} /> :
+      <div className="single-item-holder">
+        <img
+          className="single-item"
+          src={this.state.item.images.standard_resolution.url}
+          role="presentation"
+          onClick={this.onItemDeselect.bind(this)} />
+      </div> :
       <FrameList
         list={this.props.media}
         onItemSelect={this.onItemSelect.bind(this)} />
