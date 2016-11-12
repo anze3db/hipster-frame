@@ -46,6 +46,14 @@ class InstAppBar extends Component {
             <FullscreenButton
               onFullScreenChange={this.fullscreenChange.bind(this)}>
             </FullscreenButton>
+            <IconButton
+              iconStyle={{color: "white"}}
+              tooltip="Refresh"
+              tooltipPosition="bottom-center"
+              onClick={() => {this.setState({refresh: !this.state.refresh})}}
+              iconClassName="material-icons">
+              refresh
+            </IconButton>
             <IconMenu
               anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
