@@ -3,10 +3,15 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 
 const styles = {
+  parent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: 'rgb(25, 118, 210)'
+  },
   main: {
     padding: '72px 24px',
     boxSizing: 'border-box',
-    backgroundColor: 'rgb(25, 118, 210)',
     overflow: 'hidden',
     color: 'white',
     textAlign: 'center'
@@ -30,7 +35,7 @@ class Splash extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={styles.parent}>
         <div className="App-header" style={styles.main}>
           <div style={styles.logo} className="material-icons">photo_camera</div>
           <h1>Hipster Frame</h1>
@@ -42,8 +47,6 @@ class Splash extends Component {
             label="Connect to Instagram"
           />
         </div>
-        <p className="App-intro">
-        </p>
       </div>
     );
   }
