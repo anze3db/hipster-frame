@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {GridTile} from 'material-ui/GridList';
 
 class FrameList extends Component {
   render() {

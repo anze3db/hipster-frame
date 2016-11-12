@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
 import FrameItem from './FrameItem';
-import {GridList} from 'material-ui/GridList';
-
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  gridList: {
-
-  },
-};
 
 class FrameList extends Component {
   render() {
