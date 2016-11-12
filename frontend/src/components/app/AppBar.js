@@ -4,6 +4,8 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
 import FullscreenButton from './FullscreenButton';
+import AppSettings from './AppSettings';
+
 
 class InstAppBar extends Component {
 
@@ -20,8 +22,15 @@ class InstAppBar extends Component {
     });
   }
 
+  handleClose = () => {
+    this.setState({open: false});
+  }
+  handleOpen = () => {
+    this.setState({open: true});
+  }
+
   render() {
-    let styles = {}
+    let styles = {};
     if (this.state.fullscreen) {
       styles = {
         display: 'none'
@@ -42,10 +51,12 @@ class InstAppBar extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               iconButtonElement={<IconButton
                 iconStyle={{color: "white"}}
-                iconClassName="material-icons">person</IconButton>}
+                iconClassName="material-icons">menu</IconButton>}
             >
-              <MenuItem primaryText="Sign out" href="/api/instagram/logout" />
+              <MenuItem primaryText="Settings" leftIcon={<span className="material-icons">settings</span>} onTouchTap={this.handleOpen} />
+              <MenuItem primaryText="Sign out" leftIcon={<span className="material-icons">person</span>} href="/api/instagram/logout" />
             </IconMenu>
+            <AppSettings open={this.state.open} closeHandler={this.handleClose} />
           </div>
         }
       />
