@@ -7,7 +7,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: 'rgb(25, 118, 210)'
+    backgroundColor: '#1565C0'
   },
   main: {
     padding: '72px 24px',
@@ -27,7 +27,6 @@ const styles = {
     marginTop: '40px',
     fontVariant: 'small-caps',
     textTransform: 'inherit !important',
-    color: 'red'
   }
 };
 
@@ -42,7 +41,7 @@ class Splash extends Component {
           <h2 style={styles.h2}>Transform your instagram into a beautiful live picture frame</h2>
           <RaisedButton
             style={styles.button}
-            backgroundColor="#BBDEFB"
+            backgroundColor="#FBC02D"
             href="/api/instagram/authorize"
             label="Connect to Instagram"
           />
