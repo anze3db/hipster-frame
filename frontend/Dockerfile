@@ -6,6 +6,6 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 RUN npm install
 COPY src /usr/src/app
-COPY index.html /usr/src/app/public
+COPY public /usr/src/app/public
 
 CMD [ "npm", "start" ]
