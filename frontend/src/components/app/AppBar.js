@@ -4,7 +4,9 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
 import FullscreenButton from './FullscreenButton';
+import RefreshButton from './RefreshButton';
 import AppSettings from './AppSettings';
+import Media from '../../stores/Media';
 
 
 class InstAppBar extends Component {
@@ -46,14 +48,7 @@ class InstAppBar extends Component {
             <FullscreenButton
               onFullScreenChange={this.fullscreenChange.bind(this)}>
             </FullscreenButton>
-            <IconButton
-              iconStyle={{color: "white"}}
-              tooltip="Refresh"
-              tooltipPosition="bottom-center"
-              onClick={() => {this.setState({refresh: !this.state.refresh})}}
-              iconClassName="material-icons">
-              refresh
-            </IconButton>
+            <RefreshButton></RefreshButton>
             <IconMenu
               anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
