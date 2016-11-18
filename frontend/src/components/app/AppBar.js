@@ -6,8 +6,6 @@ import AppBar from 'material-ui/AppBar';
 import FullscreenButton from './FullscreenButton';
 import RefreshButton from './RefreshButton';
 import AppSettings from './AppSettings';
-import Media from '../../stores/Media';
-
 
 class InstAppBar extends Component {
 
