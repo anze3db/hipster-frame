@@ -1,46 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
+import {observer} from 'mobx-react';
 import AppBar from './AppBar';
 import Frame from './Frame';
+import Media from '../../stores/Media';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      media: []
-    };
-  }
-  mountData() {
-    this.request = fetch('/api/instagram/media', {
-      credentials: 'same-origin'
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.error("Not OK");
-      }
-    }).then((response) => {
-      return response.map((res) => res[4]); // 4th element is the image json
-    }).then((media) => {
-      this.setState({
-        media
-      });
-    });
-  }
+
+
+const App = observer(class App extends React.Component {
+
   componentDidMount() {
-    this.mountData();
+    Media.fetch();
   }
-  componentWillUnmount() {
-    // Should abort the request here, but can't because ES2015 promises
-    // can't be cancelled :(
-  }
+
   render() {
     return (
       <div className="App">
         <AppBar />
-        <Frame media={this.state.media} />
+        {Media.loading ? "Loading..." : <Frame media={Media.list} />}
       </div>
     );
   }
-}
+});
 
 export default App;
