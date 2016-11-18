@@ -3,13 +3,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {useStrict} from 'mobx';
 import App from './components/app/App';
 import Splash from './components/splash/Splash';
 import theme from './theme.js';
 import './index.css';
 
 const auth = document.cookie.split('; ').map((c) => c.substring(0, c.indexOf('='))).indexOf('auth') > -1;
-
+useStrict(true);
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
