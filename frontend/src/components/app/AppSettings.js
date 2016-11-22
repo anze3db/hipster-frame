@@ -34,7 +34,7 @@ class AppSettings extends Component {
           style={{marginBottom: 16}}
         />
         <Toggle
-          label="Include picture from people you follow"
+          label="Include your likes"
           labelPosition="right"
           defaultToggled={false}
           style={{marginBottom: 16}}
