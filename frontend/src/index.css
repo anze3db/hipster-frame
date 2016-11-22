@@ -32,8 +32,8 @@ html,body,#root,.App,.single-item-holder {
 
 .single-item-holder {
   text-align: center;
-    position: fixed;
-    width: 100%;
+  position: fixed;
+  width: 100%;
 }
 
 @media screen and (orientation: portrait) {
@@ -44,6 +44,9 @@ html,body,#root,.App,.single-item-holder {
 
 @media screen and (orientation: landscape) {
   .single-item {
-    height: 100%;
+    height: calc(100% - 125px);
+  }
+  .single-item:fullscreen {
+    height: calc(100% - 75px);
   }
 }
