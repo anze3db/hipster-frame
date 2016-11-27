@@ -56,8 +56,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         res, = cursor.fetchone()
         user["id"] = res
         self.set_secure_cookie("auth", str(res))
-        ioloop = tornado.ioloop.IOLoop.current()
-        ioloop.spawn_callback(self._fetch_media, user)
+        await self._fetch_media(user)
         self.redirect(REDIRECT_URI)
 
     async def authorize(self):
