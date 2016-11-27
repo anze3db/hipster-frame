@@ -15,7 +15,7 @@ const Media = observable({
         console.error("/api/instagram/media is not OK");
       }
     }).then((response) => {
-      return response.map((res) => res[4]); // 4th element is the image json
+      return response.map((res) => res[3]); // 3rd element is the image json
     }).then(action((media) => {
       Media.list = media;
       Media.loading = false;
