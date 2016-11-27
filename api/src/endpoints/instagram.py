@@ -22,10 +22,10 @@ class InstagramHandler(tornado.web.RequestHandler):
     def initialize(self):
         self._check_env_variables()
         self.get_actions = {
-            "callback": self._callback,
-            "authorize": self._authorize,
-            "media": self._media,
-            "logout": self._logout,
+            "callback": self.callback,
+            "authorize": self.authorize,
+            "media": self.media,
+            "logout": self.logout,
         }
 
     async def get(self, action):
@@ -34,11 +34,11 @@ class InstagramHandler(tornado.web.RequestHandler):
             return
         await self.get_actions[action]()
 
-    async def _logout(self):
+    async def logout(self):
         self.clear_cookie("auth")
         self.redirect(REDIRECT_URI)
 
-    async def _callback(self):
+    async def callback(self):
         http_client = self._get_client()
         params = {
             "client_id": os.environ.get("CLIENT_ID"),
@@ -60,14 +60,14 @@ class InstagramHandler(tornado.web.RequestHandler):
         ioloop.spawn_callback(self._fetch_media, user)
         self.redirect(REDIRECT_URI)
 
-    async def _authorize(self):
+    async def authorize(self):
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +
                   "&response_type=code").format(
                       CLIENT_ID=os.environ.get("CLIENT_ID"),
                       REDIRECT_URI=os.environ.get("REDIRECT_URI"))
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
-    async def _media(self):
+    async def media(self):
         id_ = int(self.get_secure_cookie("auth"))
         cursor = await get_media(self.application.db, id_)
         response = cursor.fetchall()
