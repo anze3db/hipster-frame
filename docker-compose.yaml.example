@@ -38,21 +38,6 @@ services:
      - SECRET_KEY=
      - SERVER_URI=http://localhost:8080
 
-  graphql:
-    build: graphql/
-    ports:
-     - "8889:8889"
-    volumes:
-     - "./graphql/src:/usr/src/app/src"
-    links:
-     - db
-    environment:
-     - SERVER_URI=http://localhost:8080
-     - DB_PASSWORD=postgres
-     - DB_USERNAME=postgres
-     - DB_HOST=db
-     - DB_PORT=5432
-
   nginx:
     build: nginx
     ports:
@@ -60,4 +45,3 @@ services:
     links:
      - frontend
      - api
-     - graphql
