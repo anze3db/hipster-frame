@@ -30,8 +30,6 @@ class FullscreenButton extends Component {
     return (
       <IconButton
         iconStyle={{color: "white"}}
-        tooltip="Fullscreen"
-        tooltipPosition="bottom-center"
         onClick={this.fullscreen.bind(this)}
         iconClassName="material-icons">
         {this.state.isFullscreen ? 'fullscreen_exit' : 'fullscreen'}

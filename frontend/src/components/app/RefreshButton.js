@@ -6,9 +6,7 @@ class RefreshButton extends Component {
   render() {
     return (
       <IconButton
-        iconStyle={{color: "white"}}
-        tooltip="Refresh"
-        tooltipPosition="bottom-center"
+        iconStyle={{color: "white", left: "0"}}
         onClick={() => { Media.fetch() }}
         iconClassName="material-icons">
         refresh
