@@ -20,7 +20,14 @@ class Frame extends Component {
       item: null
     });
   }
+  _getCaption() {
+    if (!this.state.item || !this.state.item.caption) {
+      return '';
+    }
+    return this.state.item.caption.text;
+  }
   render() {
+    const caption = this._getCaption();
     return (
       this.state.item ?
       <div className="single-item-holder">
@@ -32,7 +39,7 @@ class Frame extends Component {
         <Card style={{textAlign: 'left'}}>
         <CardHeader
           title={this.state.item.user.full_name}
-          subtitle={this.state.item.caption ? this.state.item.caption.text : ''}
+          subtitle={caption}
           avatar={this.state.item.user.profile_picture}
         />
         </Card>
