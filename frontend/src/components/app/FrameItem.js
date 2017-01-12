@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class FrameList extends Component {
+class FrameItem extends Component {
   render() {
     const item = this.props.item;
     return (
@@ -11,4 +11,4 @@ class FrameList extends Component {
   }
 }
 
-export default FrameList;
+export default FrameItem;
