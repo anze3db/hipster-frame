@@ -9,16 +9,12 @@ import { shallow } from 'enzyme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-function renderSplash() {
+it('renders splash without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <MuiThemeProvider muiTheme={theme}>
       <Splash />
     </MuiThemeProvider>, div);
-}
-
-it('renders splash without crashing', () => {
-  renderSplash();
 });
 
 it('should contain hipster-frame header', () => {
