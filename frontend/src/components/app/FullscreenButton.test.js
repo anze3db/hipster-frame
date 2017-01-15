@@ -3,11 +3,7 @@ import FullscreenButton from './FullscreenButton';
 import { shallow, mount } from 'enzyme';
 import sinon from 'sinon';
 
-// TODO: See if I can avoid MuiThemeProvider things
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import theme from '../../theme.js';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+import setupContext from '../setupMuiContext';
 
 it('calls webkitRequestFullScreen on click', () => {
   const spy = document.documentElement.webkitRequestFullScreen = sinon.spy();
@@ -25,10 +21,7 @@ it('calls webkitCancelFullScreen when in fullscreen', () => {
 });
 
 it('mounts/unmounts onwebkitfullscreenchange correctly', () => {
-  const fullscreenButton = mount(
-    <MuiThemeProvider muiTheme={theme}>
-      <FullscreenButton />
-    </MuiThemeProvider>);
+  const fullscreenButton = mount(<FullscreenButton />, setupContext(FullscreenButton));
   expect(document.onwebkitfullscreenchange).toBeTruthy();
   fullscreenButton.unmount();
   expect(document.onwebkitfullscreenchange).toBeFalsy();
@@ -36,10 +29,7 @@ it('mounts/unmounts onwebkitfullscreenchange correctly', () => {
 
 it('calls changeFullScreen callback on onwebkitfullscreenchange', () => {
   const spy = sinon.spy();
-  const fullscreenButton = mount(
-    <MuiThemeProvider muiTheme={theme}>
-      <FullscreenButton onFullScreenChange = {spy}/>
-    </MuiThemeProvider>);
+  const fullscreenButton = mount(<FullscreenButton onFullScreenChange = {spy} />, setupContext(FullscreenButton));
   document.onwebkitfullscreenchange();
   expect(spy.called).toBeTruthy();
 })
