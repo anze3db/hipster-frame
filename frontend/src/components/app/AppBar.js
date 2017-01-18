@@ -25,6 +25,7 @@ class InstAppBar extends Component {
   handleClose = () => {
     this.setState({open: false});
   }
+
   handleOpen = () => {
     this.setState({open: true});
   }

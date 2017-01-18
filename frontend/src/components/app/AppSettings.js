@@ -42,4 +42,5 @@ class AppSettings extends Component {
       </Dialog>
   }
 }
+
 export default AppSettings;

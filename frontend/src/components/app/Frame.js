@@ -10,22 +10,26 @@ class Frame extends Component {
       item: null
     };
   }
+
   onItemSelect(item) {
     this.setState({
       item
     });
   }
+
   onItemDeselect() {
     this.setState({
       item: null
     });
   }
+
   _getCaption() {
     if (!this.state.item || !this.state.item.caption) {
       return '';
     }
     return this.state.item.caption.text;
   }
+
   render() {
     const caption = this._getCaption();
     return (

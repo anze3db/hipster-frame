@@ -5,8 +5,6 @@ import AppBar from './AppBar';
 import Frame from './Frame';
 import Media from '../../stores/Media';
 
-
-
 const App = observer(class App extends React.Component {
 
   componentDidMount() {
