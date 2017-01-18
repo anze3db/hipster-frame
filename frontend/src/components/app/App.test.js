@@ -1,15 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import theme from '../../theme.js';
 import App from './App';
-import { shallow } from 'enzyme';
-// Needed for onTouchTap
-import injectTapEventPlugin from 'react-tap-event-plugin';
-
+import { shallow, mount } from 'enzyme';
+import setupContext from '../setupMuiContext';
 
 beforeAll(() => {
-  injectTapEventPlugin();
   window.fetch = jest.fn(() => {
     // TODO Make this a bit nicer
     return Promise.resolve(new window.Response('[[1,2,3,{"id":1, "images": {"standard_resolution": {}}}]]', {
@@ -20,14 +14,10 @@ beforeAll(() => {
       }
     }));
   });
-})
+});
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <MuiThemeProvider muiTheme={theme}>
-      <App />
-    </MuiThemeProvider>, div);
+  mount(<App />, setupContext(App))
 });
 
 it('renders spinner, appbar & frame', () => {
