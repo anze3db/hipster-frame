@@ -1,7 +1,6 @@
 import React from 'react';
 import Frame from './Frame';
 import { shallow } from 'enzyme';
-import sinon from 'sinon';
 
 const item = {
   images: {
@@ -33,10 +32,6 @@ function expectListOfItems(frame) {
   expect(frame.find('Card')).toHaveLength(0);
   expect(frame.find('CardHeader')).toHaveLength(0);
 }
-
-it('renders frame without crashing', () => {
-  const frame = shallow(<Frame />);
-});
 
 it('renders FrameList when item not selected', () => {
   const frame = shallow(<Frame />);

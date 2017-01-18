@@ -1,23 +1,22 @@
 import React from 'react';
 import FullscreenButton from './FullscreenButton';
 import { shallow, mount } from 'enzyme';
-import sinon from 'sinon';
 
 import setupContext from '../setupMuiContext';
 
 it('calls webkitRequestFullScreen on click', () => {
-  const spy = document.documentElement.webkitRequestFullScreen = sinon.spy();
+  const spy = document.documentElement.webkitRequestFullScreen = jest.fn();
   const fullscreenButton = shallow(<FullscreenButton />);
   fullscreenButton.simulate('click');
-  expect(spy.called).toBeTruthy();
+  expect(spy).toHaveBeenCalled();
 });
 
 it('calls webkitCancelFullScreen when in fullscreen', () => {
-  const spy = document.webkitCancelFullScreen = sinon.spy();
+  const spy = document.webkitCancelFullScreen = jest.fn();
   const fullscreenButton = shallow(<FullscreenButton />);
   document.webkitIsFullScreen = true;
   fullscreenButton.simulate('click');
-  expect(spy.called).toBeTruthy();
+  expect(spy).toHaveBeenCalled();
 });
 
 it('mounts/unmounts onwebkitfullscreenchange correctly', () => {
@@ -28,8 +27,8 @@ it('mounts/unmounts onwebkitfullscreenchange correctly', () => {
 });
 
 it('calls changeFullScreen callback on onwebkitfullscreenchange', () => {
-  const spy = sinon.spy();
-  const fullscreenButton = mount(<FullscreenButton onFullScreenChange = {spy} />, setupContext(FullscreenButton));
+  const spy = jest.fn();
+  mount(<FullscreenButton onFullScreenChange={spy} />, setupContext(FullscreenButton));
   document.onwebkitfullscreenchange();
-  expect(spy.called).toBeTruthy();
+  expect(spy).toHaveBeenCalled();
 })

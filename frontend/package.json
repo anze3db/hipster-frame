@@ -12,8 +12,7 @@
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.9.0",
     "react-addons-test-utils": "^15.4.2",
-    "react-scripts": "0.8.5",
-    "sinon": "^1.17.7"
+    "react-scripts": "0.8.5"
   },
   "dependencies": {
     "material-ui": "^0.16.4",
