@@ -4,20 +4,22 @@ const Media = observable({
   list: [],
   loading: true,
   fetch: action(() => {
-    Media.loading = true;
-
-    fetch('/api/instagram/media', {
+    Media.loading = true
+    return fetch('/api/instagram/media', {
       credentials: 'same-origin'
     }).then((response) => {
       if (response.ok) {
         return response.json();
       } else {
-        console.error("/api/instagram/media is not OK");
+        throw new Error("Did not receive OK");
       }
     }).then((response) => {
       return response.map((res) => res[3]); // 3rd element is the image json
     }).then(action((media) => {
       Media.list = media;
+      Media.loading = false;
+    })).catch(action((err) => {
+      console.error(err);
       Media.loading = false;
     }));
   })
