@@ -1,20 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import theme from '../../theme.js';
+import { shallow, mount } from 'enzyme';
 import Splash from './Splash';
-import { shallow } from 'enzyme';
-
-// Needed for onTouchTap
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+import setupContext from '../setupMuiContext';
 
 it('renders splash without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <MuiThemeProvider muiTheme={theme}>
-      <Splash />
-    </MuiThemeProvider>, div);
+  mount(<Splash />, setupContext(Splash));
 });
 
 it('should contain hipster-frame header', () => {
