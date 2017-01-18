@@ -6,7 +6,21 @@ import App from './App';
 import { shallow } from 'enzyme';
 // Needed for onTouchTap
 import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+
+
+beforeAll(() => {
+  injectTapEventPlugin();
+  window.fetch = jest.fn(() => {
+    // TODO Make this a bit nicer
+    return Promise.resolve(new window.Response('[[1,2,3,{"id":1, "images": {"standard_resolution": {}}}]]', {
+      status: 200,
+      statusText: "OK",
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }));
+  });
+})
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
