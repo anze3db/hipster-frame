@@ -1,7 +1,6 @@
 import React from 'react';
 import FrameList from './FrameList';
-import { shallow } from 'enzyme';
-import sinon from 'sinon';
+import { shallow, mount } from 'enzyme';
 
 const item = {
   images: {
@@ -20,10 +19,18 @@ const list = [
 ];
 
 it('renders frameList without crashing', () => {
-  const frameList = shallow(<FrameList list={list} />);
+  shallow(<FrameList list={list} />);
 });
 
 it('renders all the items', () => {
   const frameList = shallow(<FrameList list={list} />);
   expect(frameList.find('FrameItem')).toHaveLength(list.length);
+});
+
+it('responds to item click', () => {
+  const spy = jest.fn();
+  const frameList = mount(<FrameList list={list} onItemSelect={spy}/>);
+  const firstItem = frameList.find('FrameItem').first();
+  firstItem.simulate('click');
+  expect(spy).toHaveBeenCalled();
 });
