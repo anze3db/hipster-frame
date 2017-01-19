@@ -20,23 +20,25 @@ dependencies:
 
 test:
   override:
+    - mkdir $CIRCLE_TEST_REPORTS/{api,frontend}
     - npm test -- --coverage:
         pwd:
           frontend
         environment:
           CI: true
-    - "coverage run -m unittest discover src '*_test.py' && coverage report && coverage html":
+    - "coverage run src/test.py && coverage report && coverage html && coverage xml":
         pwd:
           api
         environment:
           DB_PASSWORD: postgres
           DB_USERNAME: postgres
-          DB_HOST: db
+          DB_HOST: db9
           DB_PORT: 5432
-          CLIENT_ID: 123
-          CLIENT_SECRET: secret
+          CLIENT_ID: 007
+          CLIENT_SECRET: agent
           REDIRECT_URI: "http://localhost:8080/api/instagram/callback"
-          SECRET_KEY: secretkey
+          SECRET_KEY: shaken
           SERVER_URI: "http://localhost:8080"
+    - mv api/reports/* $CIRCLE_TEST_REPORTS/api
   post:
-    - bash <(curl -s https://codecov.io/bash) -f /home/ubuntu/hipster-frame/frontend/coverage/clover.xml -f /home/ubuntu/hipster-frame/frontend/coverage/coverage-final.json -f /home/ubuntu/hipster-frame/api/coverage.xml
+    - bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -f /home/ubuntu/hipster-frame/frontend/coverage/clover.xml -f /home/ubuntu/hipster-frame/api/coverage.xml -t $CODECOV_TOKEN
