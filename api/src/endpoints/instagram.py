@@ -5,7 +5,7 @@ import tornado.web
 from tornado.httpclient import AsyncHTTPClient
 import json
 from models.users import insert_user
-from models.users import response_to_user
+from models.users import json_to_user
 from models.users import get_user
 from models.media import response_to_media
 from models.media import insert_media
@@ -50,8 +50,7 @@ class InstagramHandler(tornado.web.RequestHandler):
         body = urlencode(params)
         response = await http_client.fetch(INSTAGRAM_OAUTH + "access_token",
                                            method="POST", body=body)
-        data = json.loads(response.body.decode("utf-8"))
-        user = response_to_user(data)
+        user = json_to_user(response.body.decode("utf-8"))
         cursor = await insert_user(self.application.db, user)
         res, = cursor.fetchone()
         user["id"] = res

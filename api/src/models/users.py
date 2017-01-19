@@ -1,4 +1,8 @@
-def response_to_user(data):
+import json
+
+
+def json_to_user(json_str):
+    data = json.loads(json_str)
     user = data.get("user")
     user["access_token"] = data["access_token"]
     user["instagram_id"] = user["id"]
