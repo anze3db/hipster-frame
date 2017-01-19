@@ -33,7 +33,7 @@ services:
      # Add keys from https://www.instagram.com/developer/clients/manage/
      - CLIENT_ID=
      - CLIENT_SECRET=
-     - REDIRECT_URI=
+     - REDIRECT_URI=http://localhost:8080/api/instagram/callback
      # Secret key used for secure cookies
      - SECRET_KEY=
      - SERVER_URI=http://localhost:8080
