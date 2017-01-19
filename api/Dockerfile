@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-CMD coverage run -m unittest discover src && coverage report && python3 src/api.py --logging=debug
+CMD coverage run -m unittest discover src "*_test.py" && coverage report && python3 src/api.py --logging=debug
