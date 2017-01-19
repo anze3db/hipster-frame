@@ -1,0 +1,37 @@
+machine:
+  python:
+    version: 3.5.2
+
+dependencies:
+  cache_directories:
+    - "frontend/node_modules"
+  override:
+    - npm install:
+        pwd:
+          frontend
+    - pip install -r requirements.txt:
+        pwd:
+          api
+
+test:
+  override:
+    - npm test -- --coverage:
+        pwd:
+          frontend
+        environment:
+          CI: true
+    - "coverage run -m unittest discover src '*_test.py' && coverage report && coverage xml":
+        pwd:
+          api
+        environment:
+          DB_PASSWORD: postgres
+          DB_USERNAME: postgres
+          DB_HOST: db9
+          DB_PORT: 5432
+          CLIENT_ID: 007
+          CLIENT_SECRET: agent
+          REDIRECT_URI: "http://localhost:8080/api/instagram/callback"
+          SECRET_KEY: shaken
+          SERVER_URI: "http://localhost:8080"
+  post:
+    - bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -f /home/ubuntu/hipster-frame/frontend/coverage/clover.xml -f /home/ubuntu/hipster-frame/api/coverage.xml -t $CODECOV_TOKEN
