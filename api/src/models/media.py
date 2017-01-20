@@ -1,15 +1,18 @@
 import psycopg2
+import json
 
-
-def response_to_media(data, user_id):
-    media = {
-        'media_id': data.get('id'),
-        'media_created_time': data.get('created_time'),
-        'user_id': user_id,
-        'source': 'recents',
-        'data': psycopg2.extras.Json(data)
-    }
-    return media
+def json_to_media(json_str, user_id):
+    media = json.loads(json_str)
+    to_insert = []
+    for data in media.get('data', []):
+        to_insert.append({
+            'media_id': data.get('id'),
+            'media_created_time': data.get('created_time'),
+            'user_id': user_id,
+            'source': 'recents',
+            'data': psycopg2.extras.Json(data)
+        })
+    return to_insert
 
 async def _get_args_str(db, data, values):
     # TODO: Fix this, we should not have to await every db.mogrify, either try

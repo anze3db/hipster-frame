@@ -7,7 +7,7 @@ import json
 from models.users import insert_user
 from models.users import json_to_user
 from models.users import get_user
-from models.media import response_to_media
+from models.media import json_to_media
 from models.media import insert_media
 from models.media import get_media
 
@@ -87,7 +87,5 @@ class InstagramHandler(tornado.web.RequestHandler):
         response = await http_client.fetch(
             INSTAGRAM_MEDIA + user.get("access_token"),
             method="GET")
-        media = json.loads(response.body.decode("utf-8"))
-        to_insert = list(response_to_media(data, user.get('id')) for data in
-                         media.get('data', []))
+        to_insert = json_to_media(response.body.decode("utf-8"), user.get('id'))
         await insert_media(self.application.db, to_insert)
