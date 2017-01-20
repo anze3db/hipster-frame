@@ -20,7 +20,7 @@ test:
           frontend
         environment:
           CI: true
-    - "coverage run -m unittest discover src '*_test.py' && coverage report && coverage xml":
+    - py.test --cov-report xml:coverage.xml --cov=src:
         pwd:
           api
         environment:
