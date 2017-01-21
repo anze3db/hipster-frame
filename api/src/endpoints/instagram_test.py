@@ -6,6 +6,7 @@ from tornado.httputil import url_concat
 from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
 from tornado.testing import gen_test
+from tornado.web import create_signed_value
 from tornado.httpclient import HTTPRequest, HTTPResponse
 from endpoints.instagram import InstagramHandler
 from api import make_app
@@ -14,9 +15,36 @@ from api import make_app
 class InstagramTestCase(AsyncHTTPTestCase):
 
     def get_app(self):
-        app = make_app(debug=False)
+        self.app = app = make_app(debug=False)
         app.db = MagicMock()
         return app
+
+    def _get_secure_cookie(self, cookie_name, cookie_value):
+        cookie_name, cookie_value = 'auth', '1'
+        secure_cookie = create_signed_value(
+            self.app.settings["cookie_secret"],
+            cookie_name,
+            cookie_value)
+        return 'auth="' + str(secure_cookie)[2:-1] + '"'
+
+    def test_invalid_action(self):
+        response = self.fetch("/api/instagram/invalid")
+        assert response.code == 404
+
+    def test_logout(self):
+        response = self.fetch("/api/instagram/logout", follow_redirects=False)
+        assert response.code == 302
+        assert 'auth=""' in response.headers['Set-Cookie']
+
+    @patch('endpoints.instagram.get_media')
+    @gen_test
+    def test_media(self, get_media):
+        mock = MagicMock()
+        get_media.return_value = setup_future(mock)
+        headers = {'Cookie': self._get_secure_cookie('auth', '1')}
+        response = yield self.http_client.fetch(self.get_url("/api/instagram/media"), headers=headers)
+        assert response.code == 200
+        assert mock.fetchall.called is True
 
     def test_authorize(self):
         response = self.fetch("/api/instagram/authorize", follow_redirects=False)
