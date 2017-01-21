@@ -1,4 +1,4 @@
-import os
+from os import environ
 from urllib.parse import urlencode
 import tornado.ioloop
 import tornado.web
@@ -11,7 +11,7 @@ from models.media import json_to_media
 from models.media import insert_media
 from models.media import get_media
 
-REDIRECT_URI = os.environ.get("SERVER_URI")
+REDIRECT_URI = environ.get("SERVER_URI")
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
 INSTAGRAM_MEDIA = INSTAGRAM_URI + "v1/users/self/media/recent?access_token="
@@ -41,10 +41,10 @@ class InstagramHandler(tornado.web.RequestHandler):
     async def callback(self):
         http_client = self._get_client()
         params = {
-            "client_id": os.environ.get("CLIENT_ID"),
-            "client_secret": os.environ.get("CLIENT_SECRET"),
+            "client_id": environ.get("CLIENT_ID"),
+            "client_secret": environ.get("CLIENT_SECRET"),
             "grant_type": "authorization_code",
-            "redirect_uri": os.environ.get("REDIRECT_URI"),
+            "redirect_uri": environ.get("REDIRECT_URI"),
             "code": self.get_query_argument("code", "")
         }
         body = urlencode(params)
@@ -61,8 +61,8 @@ class InstagramHandler(tornado.web.RequestHandler):
     async def authorize(self):
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +
                   "&response_type=code").format(
-                      CLIENT_ID=os.environ.get("CLIENT_ID"),
-                      REDIRECT_URI=os.environ.get("REDIRECT_URI"))
+                      CLIENT_ID=environ.get("CLIENT_ID"),
+                      REDIRECT_URI=environ.get("REDIRECT_URI"))
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
     async def media(self):
@@ -76,9 +76,9 @@ class InstagramHandler(tornado.web.RequestHandler):
 
     def _check_env_variables(self):
         for key in REQUIRED_ENV_VARS:
-            if key not in os.environ:
+            if key not in environ:
                 raise Exception("Missing environment variable: {}".format(key))
-            val = os.environ.get(key)
+            val = environ.get(key)
             if not len(val):
                 raise Exception("Environment variable {} not set".format(key))
 

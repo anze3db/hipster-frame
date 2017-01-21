@@ -1,5 +1,6 @@
 import os
 import io
+from pytest import raises
 from unittest.mock import patch
 from unittest.mock import MagicMock
 from tornado.httputil import url_concat
@@ -81,6 +82,20 @@ class InstagramTestCase(AsyncHTTPTestCase):
         assert len(fetch_mock.call_args_list) == 1
         args, kwargs = fetch_mock.call_args_list[0]
         assert "code=mycode" in kwargs["body"]
+
+    @patch('endpoints.instagram.environ')
+    def test_check_undefined_env_variables(self, environ):
+        handler = InstagramHandler._check_env_variables
+        with raises(Exception) as execinfo:
+            handler(None)
+        assert 'Missing environment variable' in str(execinfo.value)
+
+    @patch('endpoints.instagram.environ', {'CLIENT_ID': ''})
+    def test_check_env_variables_with_empty_values(self):
+        handler = InstagramHandler._check_env_variables
+        with raises(Exception) as execinfo:
+            handler(None)
+        assert 'Environment variable' in str(execinfo.value)
 
 
 def setup_future(result):
