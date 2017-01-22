@@ -3,27 +3,27 @@
 `react-start-app` will run in development mode (port 3000) when you run
 docker-compose up.
 
-Some additional comamnds:
+## Useful commands:
 
 1. Prod build
 
-    ```
+    ```bash
     $ docker-compose build frontend
-    $ docker-compose run frontend node_modules/.bin/react-scripts build
+    $ run frontend npm run build
     ```
 
     The build files will be in `frontend/build/`
 
 2. Run tests
 
-    ```
-    $ docker-compose run frontend node_modules/.bin/react-scripts test --env=jsdom
+    ```bash
+    $ docker-compose run frontend npm test
     ```
 
 3. Coverage
 
-    ```
-    $ node_modules/.bin/react-scripts test --env=jsdom --coverage
+    ```bash
+    $ docker-compose run frontend npm test -- --coverage
     ```
 
     You can see the full coverage report by opening
