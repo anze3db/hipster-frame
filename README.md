@@ -9,3 +9,12 @@ $ cp docker-compose.yaml{.example,} && vim docker-compose.yaml
 # Run the app (it will be available on localhost:8080):
 $ docker-compose up
 ```
+
+## Running tests
+
+```bash
+# Run continuous test runner for api:
+$ docker-compose run api ptw
+# Run continuous test runner for frontend:
+$ docker-compose run frontend npm test -- --watch
+```
