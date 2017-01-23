@@ -3,7 +3,7 @@
 `react-start-app` will run in development mode (port 3000) when you run
 docker-compose up.
 
-## Useful commands:
+## Useful commands
 
 1. Prod build
 

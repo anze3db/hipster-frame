@@ -14,5 +14,5 @@ will reload on code changes.
 2. Coverage
 
     ```bash
-    $ docker-compose run api pytest --cov=src
+    $ docker-compose run api pytest --cov=src --cov-report html
     ```
