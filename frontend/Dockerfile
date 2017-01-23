@@ -8,4 +8,4 @@ RUN npm install
 COPY src /usr/src/app
 COPY public /usr/src/app/public
 
-CMD npm test && npm start
+CMD npm test -- --coverage && npm start
