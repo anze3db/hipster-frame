@@ -1,5 +1,7 @@
 import psycopg2
 import json
+from tornado.httpclient import AsyncHTTPClient
+
 
 def json_to_media(json_str, user_id):
     media = json.loads(json_str)
@@ -67,3 +69,11 @@ def get_media(db, id_):
         WHERE um.user_id = %s
         ORDER BY m.media_created_time DESC;
         """, (id_, ))
+
+
+async def fetch_media(db, user, url):
+    client = AsyncHTTPClient()
+    response = await client.fetch(url, method="GET")
+    to_insert = json_to_media(response.body.decode("utf-8"), user.get('id'))
+    await insert_media(db, to_insert)
+    return True

@@ -8,7 +8,7 @@ from tornado.concurrent import Future
 from tornado.testing import AsyncHTTPTestCase
 from tornado.testing import gen_test
 from tornado.web import create_signed_value
-from tornado.httpclient import HTTPRequest, HTTPResponse
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
 from endpoints.instagram import InstagramHandler
 from api import make_app
 
@@ -57,10 +57,10 @@ class InstagramTestCase(AsyncHTTPTestCase):
 
     @patch('endpoints.instagram.insert_user')
     @patch('endpoints.instagram.REDIRECT_URI', '/api/')
-    @patch.object(InstagramHandler, '_fetch_media')
+    @patch('endpoints.instagram.fetch_media')
     @patch.object(InstagramHandler, '_get_client')
     @gen_test
-    def test_callback(self, get_client, _fetch_media, insert_user):
+    def test_callback(self, get_client, fetch_media, insert_user):
         fetch_mock = get_client().fetch
         db_mock = MagicMock()
         db_mock.fetchone.return_value = (1,)
@@ -71,13 +71,13 @@ class InstagramTestCase(AsyncHTTPTestCase):
             b'"http://smotko.si", "profile_picture": "https://a.jpg",'
             b'"full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
         insert_user.side_effect = lambda db, data: setup_future(db_mock)
-        _fetch_media.side_effect = lambda user: setup_future(None)
+        fetch_media.side_effect = lambda db, user, url: setup_future(None)
         url = url_concat("/api/instagram/callback", {"code": "mycode"})
         yield self.http_client.fetch(self.get_url(url))
 
         assert get_client.called
         assert insert_user.called
-        assert _fetch_media.called
+        assert fetch_media.called
         assert db_mock.fetchone.called
         assert len(fetch_mock.call_args_list) == 1
         args, kwargs = fetch_mock.call_args_list[0]
@@ -96,6 +96,10 @@ class InstagramTestCase(AsyncHTTPTestCase):
         with raises(Exception) as execinfo:
             handler(None)
         assert 'Environment variable' in str(execinfo.value)
+
+    def test_get_client(self):
+        client = InstagramHandler._get_client(None)
+        assert isinstance(client, AsyncHTTPClient)
 
 
 def setup_future(result):

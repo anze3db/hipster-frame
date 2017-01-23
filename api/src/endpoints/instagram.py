@@ -7,8 +7,7 @@ import json
 from models.users import insert_user
 from models.users import json_to_user
 from models.users import get_user
-from models.media import json_to_media
-from models.media import insert_media
+from models.media import fetch_media
 from models.media import get_media
 
 REDIRECT_URI = environ.get("SERVER_URI")
@@ -55,7 +54,8 @@ class InstagramHandler(tornado.web.RequestHandler):
         res, = cursor.fetchone()
         user["id"] = res
         self.set_secure_cookie("auth", str(res))
-        await self._fetch_media(user)
+        await fetch_media(self.application.db, user,
+                          INSTAGRAM_MEDIA + user.get("access_token"))
         self.redirect(REDIRECT_URI)
 
     async def authorize(self):
@@ -81,11 +81,3 @@ class InstagramHandler(tornado.web.RequestHandler):
             val = environ.get(key)
             if not len(val):
                 raise Exception("Environment variable {} not set".format(key))
-
-    async def _fetch_media(self, user):
-        http_client = self._get_client()
-        response = await http_client.fetch(
-            INSTAGRAM_MEDIA + user.get("access_token"),
-            method="GET")
-        to_insert = json_to_media(response.body.decode("utf-8"), user.get('id'))
-        await insert_media(self.application.db, to_insert)
