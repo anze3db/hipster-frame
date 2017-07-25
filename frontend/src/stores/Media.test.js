@@ -18,7 +18,7 @@ const mockResponse = (status, statusText, response) => {
   });
 };
 
-pit('goes through everything', () => {
+it('goes through everything', () => {
   window.fetch = jest.fn(() => {
     return Promise.resolve(mockResponse(200, null, response));
   });
@@ -29,7 +29,7 @@ pit('goes through everything', () => {
   })
 });
 
-pit('calls error on non 200', () => {
+it('calls error on non 200', () => {
   window.fetch = jest.fn().mockImplementation(() => {
     return Promise.resolve(mockResponse(500));
   });

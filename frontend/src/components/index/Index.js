@@ -1,4 +1,4 @@
-import { Router, Route, browserHistory } from 'react-router'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import React from 'react';
 import App from '../app/App';
 import Splash from '../splash/Splash';
@@ -12,15 +12,19 @@ class Index extends React.Component {
 
   render() {
     if (this.state.auth) {
-      return <Router history={browserHistory}>
-        <Route path="/" component={App}>
-        </Route>
-      </Router>
+      return <BrowserRouter>
+        <Switch>
+            <Route path="/" component={App}>
+            </Route>
+        </Switch>
+      </BrowserRouter>
     } else {
-      return <Router history={browserHistory}>
-        <Route path="/" component={Splash}>
-        </Route>
-      </Router>
+      return <BrowserRouter>
+        <Switch>
+            <Route path="/" component={Splash}>
+            </Route>
+        </Switch>
+      </BrowserRouter>
     }
   }
 };

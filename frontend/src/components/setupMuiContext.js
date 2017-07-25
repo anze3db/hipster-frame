@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import theme from '../theme.js';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -6,7 +6,7 @@ injectTapEventPlugin();
 
 function setupContext(component) {
   component.contextTypes = {
-    muiTheme: React.PropTypes.object
+    muiTheme: PropTypes.object
   };
   return {context: {muiTheme: theme}}
 }
