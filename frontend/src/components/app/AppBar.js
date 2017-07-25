@@ -56,6 +56,7 @@ class InstAppBar extends Component {
                 iconClassName="material-icons">menu</IconButton>}
             >
               <MenuItem primaryText="Settings" leftIcon={<span className="material-icons">settings</span>} onTouchTap={this.handleOpen} />
+              <MenuItem primaryText="Privacy Policy" leftIcon={<span className="material-icons">lock</span>} href="/privacy" />
               <MenuItem primaryText="Sign out" leftIcon={<span className="material-icons">person</span>} href="/api/instagram/logout" />
             </IconMenu>
             <AppSettings open={this.state.open} closeHandler={this.handleClose} />

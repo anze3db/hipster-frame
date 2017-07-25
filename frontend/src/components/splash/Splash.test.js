@@ -16,3 +16,10 @@ it('should contain connect button', () => {
   const splash = shallow(<Splash />);
   expect(splash.find('RaisedButton')).toHaveLength(1);
 });
+
+it('should display the privacy url', () => {
+  const splash = shallow(<Splash />);
+  const links = splash.find('a');
+  expect(links).toHaveLength(1);
+  expect(links.node.props.href).toBe('/privacy')
+});

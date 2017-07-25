@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import React from 'react';
 import App from '../app/App';
 import Splash from '../splash/Splash';
+import Privacy from '../privacy/Privacy';
 
 class Index extends React.Component {
 
@@ -14,15 +15,16 @@ class Index extends React.Component {
     if (this.state.auth) {
       return <BrowserRouter>
         <Switch>
-            <Route path="/" component={App}>
-            </Route>
+          <Route path="/privacy" component={Privacy}></Route>
+          <Route path="/" component={App}></Route>
+
         </Switch>
       </BrowserRouter>
     } else {
       return <BrowserRouter>
         <Switch>
-            <Route path="/" component={Splash}>
-            </Route>
+          <Route path="/privacy" component={Privacy}></Route>
+          <Route path="/" component={Splash}></Route>
         </Switch>
       </BrowserRouter>
     }
