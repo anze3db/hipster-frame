@@ -26,6 +26,9 @@ const styles = {
     marginTop: '40px',
     fontVariant: 'small-caps',
     textTransform: 'inherit !important',
+  },
+  a: {
+    color: 'white'
   }
 };
 
@@ -44,6 +47,7 @@ class Splash extends Component {
             href="/api/instagram/authorize"
             label="Connect to Instagram"
           />
+          <p><a href="/privacy" style={styles.a}>Privacy Policy</a></p>
         </div>
       </div>
     );

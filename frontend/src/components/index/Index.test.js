@@ -13,3 +13,7 @@ it('renders app when cookie is set', () => {
   const index = mount(<Index />, setupContext(Index));
   expect(index.find('App')).toHaveLength(1);
 });
+
+it('renders privacy page on /privacy', () => {
+  // TODO: Figure out how to test routes? :F
+});
