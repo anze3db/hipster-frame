@@ -17,5 +17,5 @@ step(
         CONSTRAINT uq_media_id UNIQUE (media_id)
     )
     """,
-    "DROP TABLE IF EXISTS media",
+    "DROP TABLE IF EXISTS media CASCADE;",
 )
