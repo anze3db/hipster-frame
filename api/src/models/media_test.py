@@ -44,9 +44,17 @@ async def test_insert_media():
     db = MagicMock()
     db.execute.side_effect = setup_async(MagicMock())
     db.mogrify.side_effect = setup_async(b"mogrified")
-
     await insert_media(db, {'something': 'other'})
     assert db.execute.call_count == 2
+
+
+@pytest.mark.asyncio
+async def test_insert_media_with_empty_dict():
+    db = MagicMock()
+    db.execute.side_effect = setup_async(MagicMock())
+    db.mogrify.side_effect = setup_async(b"mogrified")
+    await insert_media(db, {})
+    assert db.execute.call_count == 0
 
 
 @pytest.mark.asyncio
