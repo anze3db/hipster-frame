@@ -1,9 +1,11 @@
 import psycopg2
 import json
+import logging
 from tornado.httpclient import AsyncHTTPClient
+from tornado import gen
 
 
-def json_to_media(json_str, user_id):
+def json_to_media(json_str, user_id, source):
     media = json.loads(json_str)
     to_insert = []
     for data in media.get('data', []):
@@ -11,10 +13,11 @@ def json_to_media(json_str, user_id):
             'media_id': data.get('id'),
             'media_created_time': data.get('created_time'),
             'user_id': user_id,
-            'source': 'recents',
+            'source': source,
             'data': psycopg2.extras.Json(data)
         })
     return to_insert
+
 
 async def _get_args_str(db, data, values):
     # TODO: Fix this, we should not have to await every db.mogrify, either try
@@ -25,8 +28,11 @@ async def _get_args_str(db, data, values):
         args.append(tmp.decode('utf-8'))
     return ','.join(args)
 
+
 async def insert_media(db, data):
     # Insert media
+    if not data:
+        return
     args_str = await _get_args_str(db, data, """
         (%(media_id)s, to_timestamp(%(media_created_time)s),
          %(data)s, current_timestamp)
@@ -49,7 +55,7 @@ async def insert_media(db, data):
     args_str = await _get_args_str(db, [{
         "media_id": id_[0],
         "user_id": data[0]["user_id"],
-        "source": "recents"
+        "source": data[0]["source"]
     } for id_ in ids], """
         (%(media_id)s, %(user_id)s, %(source)s, current_timestamp)
         """)
@@ -71,9 +77,30 @@ def get_media(db, id_):
         """, (id_, ))
 
 
-async def fetch_media(db, user, url):
+async def _fetch(url):
     client = AsyncHTTPClient()
-    response = await client.fetch(url, method="GET")
-    to_insert = json_to_media(response.body.decode("utf-8"), user.get('id'))
-    await insert_media(db, to_insert)
+    logging.info('url %s started', url)
+    res = await client.fetch(url, method="GET")
+    logging.info("url %s finished", url)
+    return res
+
+
+async def fetch_media(db, user, url, liked=None):
+    source_names = (
+        'INSTAGRAM_POSTED',
+        'INSTAGRAM_LIKED'
+    )
+    source_requests = (
+        _fetch(url),
+        _fetch(liked)
+    )
+    source_results = await gen.multi(source_requests)
+    source_jsons = [json_to_media(
+        source_results[i].body.decode("utf-8"), user.get('id'), name
+    ) for i, name in enumerate(source_names)]
+
+    await gen.multi([
+        insert_media(db, sjson) for sjson in source_jsons
+    ])
+    logging.info("Awaited DB INSERT")
     return True
