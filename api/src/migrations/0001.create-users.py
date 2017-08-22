@@ -21,5 +21,5 @@ step(
         CONSTRAINT uq_instagram_id UNIQUE (instagram_id)
     )
     """,
-    "DROP TABLE IF EXISTS users",
+    "DROP TABLE IF EXISTS users CASCADE;",
 )

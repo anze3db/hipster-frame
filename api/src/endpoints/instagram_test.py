@@ -43,12 +43,14 @@ class InstagramTestCase(AsyncHTTPTestCase):
         mock = MagicMock()
         get_media.return_value = setup_future(mock)
         headers = {'Cookie': self._get_secure_cookie('auth', '1')}
-        response = yield self.http_client.fetch(self.get_url("/api/instagram/media"), headers=headers)
+        response = yield self.http_client.fetch(self.get_url(
+            "/api/instagram/media"), headers=headers)
         assert response.code == 200
         assert mock.fetchall.called is True
 
     def test_authorize(self):
-        response = self.fetch("/api/instagram/authorize", follow_redirects=False)
+        response = self.fetch(
+            "/api/instagram/authorize", follow_redirects=False)
         location = response.headers.get("location")
         assert response.code == 302, str(response.code) + " Not a redirect"
         assert "https://api.instagram.com/oauth/authorize/" in location
@@ -71,7 +73,8 @@ class InstagramTestCase(AsyncHTTPTestCase):
             b'"http://smotko.si", "profile_picture": "https://a.jpg",'
             b'"full_name": "An\u017ee Pe\u010dar", "id": "31006441"}}')
         insert_user.side_effect = lambda db, data: setup_future(db_mock)
-        fetch_media.side_effect = lambda db, user, url: setup_future(None)
+        fetch_media.side_effect = lambda db, user, url, liked: setup_future(
+            None)
         url = url_concat("/api/instagram/callback", {"code": "mycode"})
         yield self.http_client.fetch(self.get_url(url))
 

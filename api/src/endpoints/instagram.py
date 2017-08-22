@@ -6,7 +6,6 @@ from tornado.httpclient import AsyncHTTPClient
 import json
 from models.users import insert_user
 from models.users import json_to_user
-from models.users import get_user
 from models.media import fetch_media
 from models.media import get_media
 
@@ -14,6 +13,7 @@ REDIRECT_URI = environ.get("SERVER_URI")
 INSTAGRAM_URI = "https://api.instagram.com/"
 INSTAGRAM_OAUTH = INSTAGRAM_URI + "oauth/"
 INSTAGRAM_MEDIA = INSTAGRAM_URI + "v1/users/self/media/recent?access_token="
+INSTAGRAM_LIKED = INSTAGRAM_URI + "v1/users/self/media/liked?access_token="
 REQUIRED_ENV_VARS = ("CLIENT_ID", "CLIENT_SECRET", "REDIRECT_URI")
 
 
@@ -55,14 +55,16 @@ class InstagramHandler(tornado.web.RequestHandler):
         user["id"] = res
         self.set_secure_cookie("auth", str(res))
         await fetch_media(self.application.db, user,
-                          INSTAGRAM_MEDIA + user.get("access_token"))
+                          INSTAGRAM_MEDIA + user.get("access_token"),
+                          INSTAGRAM_LIKED + user.get("access_token"))
         self.redirect(REDIRECT_URI)
 
     async def authorize(self):
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +
-                  "&response_type=code").format(
+                  "&response_type=code&scope={SCOPE}").format(
                       CLIENT_ID=environ.get("CLIENT_ID"),
-                      REDIRECT_URI=environ.get("REDIRECT_URI"))
+                      REDIRECT_URI=environ.get("REDIRECT_URI"),
+                      SCOPE="public_content")
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
     async def media(self):
