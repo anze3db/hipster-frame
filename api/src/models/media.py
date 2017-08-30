@@ -84,6 +84,17 @@ def get_media(db, user_id):
         """, (user_id, ))
 
 
+def oldest_inserted_id(db, id_):
+    """Get oldest media inserted id"""
+    return db.execute(
+        """
+        SELECT m.media_id FROM media AS m
+          JOIN user_media AS um ON um.media_id = m.id
+         WHERE um.user_id = %s
+         ORDER BY m.media_created_time ASC LIMIT 1;
+        """, (id_, ))
+
+
 async def _fetch(url):
     client = AsyncHTTPClient()
     logging.info('url %s started', url)

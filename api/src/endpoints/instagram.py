@@ -8,8 +8,10 @@ import tornado.web
 from tornado.httpclient import AsyncHTTPClient
 from models.users import insert_user
 from models.users import json_to_user
+from models.users import get_user
 from models.media import fetch_media
 from models.media import get_media
+from models.media import oldest_inserted_id
 
 REDIRECT_URI = environ.get("SERVER_URI")
 INSTAGRAM_URI = "https://api.instagram.com/"
@@ -36,6 +38,7 @@ class InstagramHandler(tornado.web.RequestHandler):  # pylint: disable=W0223
             "callback": self.callback,
             "authorize": self.authorize,
             "media": self.media,
+            "more": self.more,
             "logout": self.logout,
         }
 
@@ -98,6 +101,20 @@ class InstagramHandler(tornado.web.RequestHandler):  # pylint: disable=W0223
     async def media(self):
         """Fetch media /api/instagram/media"""
         id_ = int(self.get_secure_cookie("auth"))
+        cursor = await get_media(self.application.db, id_)
+        response = cursor.fetchall()
+        self.write(json.dumps(response, default=str))
+
+    async def more(self):
+        """Fetch more /api/instagram/more"""
+        id_ = int(self.get_secure_cookie("auth"))
+        cursor = await get_user(self.application.db, id_)
+        user = cursor.fetchone()
+        cursor = await oldest_inserted_id(self.application.db, id_)
+        response = cursor.fetchone()[0]
+        await fetch_media(self.application.db, user,
+                          INSTAGRAM_MEDIA + user[2] + '&max_id=' + response,
+                          INSTAGRAM_LIKED + user[2] + '&max_id=' + response)
         cursor = await get_media(self.application.db, id_)
         response = cursor.fetchall()
         self.write(json.dumps(response, default=str))
