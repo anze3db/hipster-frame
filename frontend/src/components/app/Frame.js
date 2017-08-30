@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FrameList from './FrameList';
+import MoreButton from './MoreButton';
 import {Card, CardHeader} from 'material-ui/Card';
 
 class Frame extends Component {
@@ -48,9 +49,12 @@ class Frame extends Component {
         />
         </Card>
       </div> :
-      <FrameList
-        list={this.props.media}
-        onItemSelect={this.onItemSelect.bind(this)} />
+      <div>
+        <FrameList
+          list={this.props.media}
+          onItemSelect={this.onItemSelect.bind(this)} />
+        <MoreButton />
+      </div>
     );
   }
 }
