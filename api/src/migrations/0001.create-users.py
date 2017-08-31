@@ -1,3 +1,6 @@
+"""Create users migration"""
+# pylint: disable=C0103
+
 #
 # file: migrations/0001.create-users.py
 #

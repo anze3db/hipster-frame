@@ -1,3 +1,6 @@
+"""Create media migration"""
+# pylint: disable=C0103
+
 #
 # file: migrations/0002.create-media.py
 #

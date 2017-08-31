@@ -1,9 +1,11 @@
+"""Instagram endpoint (/api/instagram)"""
+
+import json
 from os import environ
 from urllib.parse import urlencode
 import tornado.ioloop
 import tornado.web
 from tornado.httpclient import AsyncHTTPClient
-import json
 from models.users import insert_user
 from models.users import json_to_user
 from models.media import fetch_media
@@ -17,9 +19,19 @@ INSTAGRAM_LIKED = INSTAGRAM_URI + "v1/users/self/media/liked?access_token="
 REQUIRED_ENV_VARS = ("CLIENT_ID", "CLIENT_SECRET", "REDIRECT_URI")
 
 
-class InstagramHandler(tornado.web.RequestHandler):
+class InstagramHandler(tornado.web.RequestHandler):  # pylint: disable=W0223
+    """Instagram request handler
+
+       Handles everything that comes through /api/instagram/<action>
+
+       Action can be:
+         * callback - used for authorisation callback
+         * authorise - used for authorising the user
+         * logout - used to log out the user
+         * media - used to fetch the media
+    """
     def initialize(self):
-        self._check_env_variables()
+        _check_env_variables()
         self.get_actions = {
             "callback": self.callback,
             "authorize": self.authorize,
@@ -27,18 +39,31 @@ class InstagramHandler(tornado.web.RequestHandler):
             "logout": self.logout,
         }
 
-    async def get(self, action):
+    async def get(self, action):  # pylint: disable=W0221
         if action not in self.get_actions.keys():
             self.send_error(404)
             return
         await self.get_actions[action]()
 
     async def logout(self):
+        """Logout /api/instagram/logout
+
+           Logs out the user and redirects to REDIRECT_URI
+        """
         self.clear_cookie("auth")
         self.redirect(REDIRECT_URI)
 
     async def callback(self):
-        http_client = self._get_client()
+        """Callback /api/instagram/callback
+
+           Receives the instagram oauth callback and does the following
+              * Fetches the access_token
+              * Stores the instagram user into the database
+              * Sets the auth secure cookie
+              * Fetches media from instagram and stores it into the database
+              * Redirects to REDIRECT_URI
+        """
+        http_client = _get_client()
         params = {
             "client_id": environ.get("CLIENT_ID"),
             "client_secret": environ.get("CLIENT_SECRET"),
@@ -60,6 +85,9 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.redirect(REDIRECT_URI)
 
     async def authorize(self):
+        """Authorise the user with instagram /api/instagram/authorize
+
+        First step in the oauth process"""
         params = ("/?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}" +
                   "&response_type=code&scope={SCOPE}").format(
                       CLIENT_ID=environ.get("CLIENT_ID"),
@@ -68,18 +96,21 @@ class InstagramHandler(tornado.web.RequestHandler):
         self.redirect(INSTAGRAM_OAUTH + "authorize" + params)
 
     async def media(self):
+        """Fetch media /api/instagram/media"""
         id_ = int(self.get_secure_cookie("auth"))
         cursor = await get_media(self.application.db, id_)
         response = cursor.fetchall()
-        self.write(json.dumps(response, default=lambda x: str(x)))
+        self.write(json.dumps(response, default=str))
 
-    def _get_client(self):
-        return AsyncHTTPClient()
 
-    def _check_env_variables(self):
-        for key in REQUIRED_ENV_VARS:
-            if key not in environ:
-                raise Exception("Missing environment variable: {}".format(key))
-            val = environ.get(key)
-            if not len(val):
-                raise Exception("Environment variable {} not set".format(key))
+def _get_client():
+    return AsyncHTTPClient()
+
+
+def _check_env_variables():
+    for key in REQUIRED_ENV_VARS:
+        if key not in environ:
+            raise Exception("Missing environment variable: {}".format(key))
+        val = environ.get(key)
+        if not val:
+            raise Exception("Environment variable {} not set".format(key))

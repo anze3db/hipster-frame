@@ -37,5 +37,8 @@ test:
           REDIRECT_URI: "http://localhost:8080/api/instagram/callback"
           SECRET_KEY: shaken
           SERVER_URI: "http://localhost:8080"
+    - pylint src:
+        pwd:
+          api
   post:
     - bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy -f /home/ubuntu/hipster-frame/frontend/coverage/clover.xml -f /home/ubuntu/hipster-frame/api/coverage.xml -t $CODECOV_TOKEN
