@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /usr/src/app
 
-CMD py.test --cov=src && python3 src/api.py --logging=debug
+CMD py.test --cov=src && pylint src && python3 src/api.py --logging=debug
