@@ -81,7 +81,7 @@ output-format=text
 reports=no
 
 # Activate the evaluation score.
-score=no
+score=yes
 
 
 [REFACTORING]
