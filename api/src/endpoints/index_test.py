@@ -1,24 +1,10 @@
 """Index test"""
 
-from tornado.testing import AsyncHTTPTestCase
-from tornado.web import create_signed_value
-from api import make_app
-
+from endpoints.endpoint_test import EndpointTestCase
 
 # pylint: disable=R0201,W0613
-class IndexTestCase(AsyncHTTPTestCase):
-    """Instagram TestCase"""
-    def get_app(self):
-        self.app = app = make_app(debug=False)
-        return app
-
-    def _get_secure_cookie(self, cookie_name, cookie_value):
-        cookie_name, cookie_value = 'auth', '1'
-        secure_cookie = create_signed_value(
-            self.app.settings["cookie_secret"],
-            cookie_name,
-            cookie_value)
-        return 'auth="' + str(secure_cookie)[2:-1] + '"'
+class IndexTestCase(EndpointTestCase):
+    """Index TestCase"""
 
     def test_index_without_cookie(self):
         """Test api/"""

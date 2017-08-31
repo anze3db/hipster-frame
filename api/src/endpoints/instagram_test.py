@@ -7,30 +7,16 @@ from unittest.mock import MagicMock
 from pytest import raises
 from tornado.httputil import url_concat
 from tornado.concurrent import Future
-from tornado.testing import AsyncHTTPTestCase
 from tornado.testing import gen_test
-from tornado.web import create_signed_value
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest, HTTPResponse
+from endpoints.endpoint_test import EndpointTestCase
 from endpoints.instagram import _check_env_variables
 from endpoints.instagram import _get_client
-from api import make_app
 
 
 # pylint: disable=R0201,W0613
-class InstagramTestCase(AsyncHTTPTestCase):
+class InstagramTestCase(EndpointTestCase):
     """Instagram TestCase"""
-    def get_app(self):
-        self.app = app = make_app(debug=False)
-        app.db = MagicMock()
-        return app
-
-    def _get_secure_cookie(self, cookie_name, cookie_value):
-        cookie_name, cookie_value = 'auth', '1'
-        secure_cookie = create_signed_value(
-            self.app.settings["cookie_secret"],
-            cookie_name,
-            cookie_value)
-        return 'auth="' + str(secure_cookie)[2:-1] + '"'
 
     def test_invalid_action(self):
         """Test api/instagram/invalid"""
