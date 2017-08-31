@@ -15,6 +15,8 @@ $ docker-compose up
 ```bash
 # Run continuous test runner for api:
 $ docker-compose run api ptw
+# Run pylint for api:
+$ docker-compose run api pylint src
 # Run continuous test runner for frontend:
 $ docker-compose run frontend npm test -- --watch
 ```
