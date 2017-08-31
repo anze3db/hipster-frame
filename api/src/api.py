@@ -6,6 +6,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.options
 import psycopg2
+from endpoints.index import IndexHandler
 from endpoints.instagram import InstagramHandler
 from yoyo import read_migrations
 from yoyo import get_backend
@@ -18,22 +19,13 @@ DBARGS = {
 }
 
 
-class MainHandler(tornado.web.RequestHandler):  # pylint: disable=W0223
-    """Main Handler"""
-    def get(self):  # pylint: disable=W0221
-        if self.get_secure_cookie("auth"):
-            self.write("Authorized <a href='/instagram/logout'>Logout</a>")
-        else:
-            self.write("<a href='/instagram/authorize'>Authorize</a>")
-
-
 def make_app(debug=False):
     """Create a new instance of tornado.web.Application
 
        Sets up the API routes (currently just /api/instagram)
     """
     return tornado.web.Application([
-        (r"/api/", MainHandler),
+        (r"/api/", IndexHandler),
         (r"/api/instagram/(?P<action>[\w]+)/?", InstagramHandler)
     ], debug=debug, cookie_secret=os.environ.get("CLIENT_ID"))
 
