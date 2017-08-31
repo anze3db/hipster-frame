@@ -1,11 +1,14 @@
-import psycopg2
+"""Media module"""
+
 import json
 import logging
+import psycopg2
 from tornado.httpclient import AsyncHTTPClient
 from tornado import gen
 
 
 def json_to_media(json_str, user_id, source):
+    """Transform the media json string into media dicts"""
     media = json.loads(json_str)
     to_insert = []
     for data in media.get('data', []):
@@ -20,8 +23,11 @@ def json_to_media(json_str, user_id, source):
 
 
 async def _get_args_str(db, data, values):
-    # TODO: Fix this, we should not have to await every db.mogrify, either try
-    #       to await a list or call db.mogrify only once!
+    """Get args str
+
+    TODO: Fix this, we should not have to await every db.mogrify, either try
+          to await a list or call db.mogrify only once!
+    """
     args = []
     for datum in data:
         tmp = await db.mogrify(values, datum)
@@ -30,7 +36,7 @@ async def _get_args_str(db, data, values):
 
 
 async def insert_media(db, data):
-    # Insert media
+    """Insert media into the database"""
     if not data:
         return
     args_str = await _get_args_str(db, data, """
@@ -68,13 +74,14 @@ async def insert_media(db, data):
         """)
 
 
-def get_media(db, id_):
+def get_media(db, user_id):
+    """Get media from the database for a given user_id"""
     return db.execute(
         """
         SELECT m.* FROM media AS m JOIN user_media AS um ON um.media_id = m.id
         WHERE um.user_id = %s
         ORDER BY m.media_created_time DESC;
-        """, (id_, ))
+        """, (user_id, ))
 
 
 async def _fetch(url):
@@ -86,6 +93,10 @@ async def _fetch(url):
 
 
 async def fetch_media(db, user, url, liked=None):
+    """Fetch media from the instagram API
+
+    TODO: This method does not belong here, move into a separate integrations
+    module"""
     source_names = (
         'INSTAGRAM_POSTED',
         'INSTAGRAM_LIKED'

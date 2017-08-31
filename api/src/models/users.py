@@ -1,7 +1,10 @@
+"""Users module"""
+
 import json
 
 
 def json_to_user(json_str):
+    """Transforms the user json string into the user dict"""
     data = json.loads(json_str)
     user = data.get("user")
     user["access_token"] = data["access_token"]
@@ -11,6 +14,8 @@ def json_to_user(json_str):
 
 
 def insert_user(db, user):
+    """Insert a new user to the database, if the user with the instagram_id
+       already exists update the current user object."""
     return db.execute(
         """
         INSERT INTO users (instagram_id, access_token, username, bio,
@@ -32,7 +37,7 @@ def insert_user(db, user):
 
 
 def get_user(db, id_):
-    # TODO: Querying the database like this might not be ideal
+    """Use the id to get the user from the database"""
     id_ = int(id_)
     return db.execute(
         """

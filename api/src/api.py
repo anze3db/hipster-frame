@@ -1,5 +1,7 @@
-import momoko
+"""Main entry point for the hipster-frame API"""
+
 import os
+import momoko
 import tornado.ioloop
 import tornado.web
 import tornado.options
@@ -16,8 +18,9 @@ DBARGS = {
 }
 
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
+class MainHandler(tornado.web.RequestHandler):  # pylint: disable=W0223
+    """Main Handler"""
+    def get(self):  # pylint: disable=W0221
         if self.get_secure_cookie("auth"):
             self.write("Authorized <a href='/instagram/logout'>Logout</a>")
         else:
@@ -25,6 +28,10 @@ class MainHandler(tornado.web.RequestHandler):
 
 
 def make_app(debug=False):
+    """Create a new instance of tornado.web.Application
+
+       Sets up the API routes (currently just /api/instagram)
+    """
     return tornado.web.Application([
         (r"/api/", MainHandler),
         (r"/api/instagram/(?P<action>[\w]+)/?", InstagramHandler)
@@ -32,6 +39,7 @@ def make_app(debug=False):
 
 
 def init_db(app, ioloop):
+    """Init the app db connection to the postgres database"""
     app.db = momoko.Pool(
         dsn=('dbname=postgres user={user} password={password} '
              'host={host} port={port}').format(**DBARGS),
@@ -48,6 +56,10 @@ def init_db(app, ioloop):
 
 
 def init_migrations(rollback=False):
+    """Run migrations
+
+       Also rollback if the rollback parameter is True (useful for testing
+       migrations), but kinda dangerous for production though."""
     backend = get_backend(
         'postgres://{user}:{password}@{host}/postgres'.format(**DBARGS))
     migrations = read_migrations('src/migrations')
@@ -57,10 +69,10 @@ def init_migrations(rollback=False):
 
 
 if __name__ == "__main__":
-    app = make_app(debug=True)
+    APP = make_app(debug=True)
     tornado.options.parse_command_line()
     init_migrations(rollback=False)
-    ioloop = tornado.ioloop.IOLoop.current()
-    init_db(app, ioloop)
-    app.listen(8888)
-    ioloop.start()
+    IOLOOP = tornado.ioloop.IOLoop.current()
+    init_db(APP, IOLOOP)
+    APP.listen(8888)
+    IOLOOP.start()
